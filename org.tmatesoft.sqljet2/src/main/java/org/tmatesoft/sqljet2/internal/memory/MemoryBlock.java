@@ -1,4 +1,4 @@
-package org.tmatesoft.sqljet2.memory;
+package org.tmatesoft.sqljet2.internal.memory;
 
 public interface MemoryBlock extends Memory {
 
