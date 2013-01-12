@@ -2,6 +2,7 @@ package org.tmatesoft.sqljet2.internal.memory;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.Arrays;
 
 final public class BufferMemory extends AbstractMemory {
 
@@ -61,28 +62,39 @@ final public class BufferMemory extends AbstractMemory {
 		buffer.putLong(address, value);
 	}
 
-	final public char getChar(int address) {
+	final public char getChar(final int address) {
 		return buffer.getChar(address);
 	}
 
-	final public void putChar(int address, char value) {
+	final public void putChar(final int address, final char value) {
 		buffer.putChar(address, value);
 	}
 
-	final public float getFloat(int address) {
+	final public float getFloat(final int address) {
 		return buffer.getFloat(address);
 	}
 
-	final public void putFloat(int address, float value) {
+	final public void putFloat(final int address, final float value) {
 		buffer.putFloat(address, value);
 	}
 
-	final public double getDouble(int address) {
+	final public double getDouble(final int address) {
 		return buffer.getDouble(address);
 	}
 
-	final public void putDouble(int address, double value) {
+	final public void putDouble(final int address, final double value) {
 		buffer.putDouble(address, value);
+	}
+
+	final public void fill(final byte value) {
+		if (buffer.hasArray()) {
+			Arrays.fill(buffer.array(), value);
+		} else {
+			final int c = buffer.capacity();
+			for (int i = 0; i < c; i++) {
+				buffer.put(i, value);
+			}
+		}
 	}
 
 }

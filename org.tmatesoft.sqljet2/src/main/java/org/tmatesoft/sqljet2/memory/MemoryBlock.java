@@ -8,4 +8,8 @@ public interface MemoryBlock extends Memory {
 
 	Pointer getEnd();
 
+	void fill(byte value);
+	
+	void clear();
+
 }

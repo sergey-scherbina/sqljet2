@@ -1,5 +1,7 @@
 package org.tmatesoft.sqljet2.internal.memory;
 
+import java.util.Arrays;
+
 final public class ArrayMemory extends AbstractMemory {
 
 	private final byte[] array;
@@ -70,6 +72,10 @@ final public class ArrayMemory extends AbstractMemory {
 
 	final public void putDouble(int address, double value) {
 		putDouble(this, address, value);
+	}
+
+	final public void fill(byte value) {
+		Arrays.fill(array, value);
 	}
 
 }

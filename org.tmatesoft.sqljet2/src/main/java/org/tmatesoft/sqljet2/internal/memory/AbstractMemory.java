@@ -178,4 +178,8 @@ public abstract class AbstractMemory implements MemoryBlock {
 		putInt(address, fromUnsignedInt(value));
 	}
 
+	final public void clear() {
+		fill((byte) 0);
+	}
+
 }
