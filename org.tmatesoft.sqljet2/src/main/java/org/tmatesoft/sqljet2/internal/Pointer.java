@@ -1,4 +1,4 @@
-package org.tmatesoft.sqljet2.internal.memory;
+package org.tmatesoft.sqljet2.internal;
 
 public interface Pointer extends Memory, Comparable<Pointer> {
 

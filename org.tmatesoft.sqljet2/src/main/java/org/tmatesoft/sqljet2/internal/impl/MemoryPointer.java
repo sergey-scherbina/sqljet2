@@ -1,7 +1,7 @@
-package org.tmatesoft.sqljet2.internal.impl.memory;
+package org.tmatesoft.sqljet2.internal.impl;
 
-import org.tmatesoft.sqljet2.internal.memory.Memory;
-import org.tmatesoft.sqljet2.internal.memory.Pointer;
+import org.tmatesoft.sqljet2.internal.Memory;
+import org.tmatesoft.sqljet2.internal.Pointer;
 
 final public class MemoryPointer implements Pointer {
 

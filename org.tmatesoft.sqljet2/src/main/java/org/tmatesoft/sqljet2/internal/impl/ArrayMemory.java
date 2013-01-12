@@ -1,4 +1,4 @@
-package org.tmatesoft.sqljet2.internal.impl.memory;
+package org.tmatesoft.sqljet2.internal.impl;
 
 import java.util.Arrays;
 

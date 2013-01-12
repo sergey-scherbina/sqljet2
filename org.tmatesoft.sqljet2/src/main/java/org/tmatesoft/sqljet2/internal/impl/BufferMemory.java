@@ -1,4 +1,4 @@
-package org.tmatesoft.sqljet2.internal.impl.memory;
+package org.tmatesoft.sqljet2.internal.impl;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
