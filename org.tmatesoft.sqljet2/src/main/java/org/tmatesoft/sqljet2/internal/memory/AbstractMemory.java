@@ -1,9 +1,10 @@
 package org.tmatesoft.sqljet2.internal.memory;
 
 import org.tmatesoft.sqljet2.memory.Memory;
+import org.tmatesoft.sqljet2.memory.MemoryBlock;
 import org.tmatesoft.sqljet2.memory.Pointer;
 
-public abstract class AbstractMemory implements Memory {
+public abstract class AbstractMemory implements MemoryBlock {
 
 	final public static int U_BYTE = MAX_UNSIGNED_BYTE;
 	final public static long U_BYTE_L = MAX_UNSIGNED_BYTE;
@@ -135,6 +136,14 @@ public abstract class AbstractMemory implements Memory {
 
 	final public Pointer getPointer(final int address) {
 		return new MemoryPointer(this, address);
+	}
+
+	public Pointer getBegin() {
+		return getPointer(0);
+	}
+
+	public Pointer getEnd() {
+		return getPointer(getSize());
 	}
 
 	final public boolean getBoolean(final int address) {

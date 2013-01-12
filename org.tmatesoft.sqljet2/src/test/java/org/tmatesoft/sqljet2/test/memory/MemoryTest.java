@@ -6,12 +6,13 @@ import org.junit.Test;
 import org.tmatesoft.sqljet2.internal.memory.ArrayMemory;
 import org.tmatesoft.sqljet2.internal.memory.BufferMemory;
 import org.tmatesoft.sqljet2.memory.Memory;
+import org.tmatesoft.sqljet2.memory.MemoryBlock;
 import org.tmatesoft.sqljet2.memory.Pointer;
 
 public class MemoryTest {
 
-	private void testMemory(final Memory m) {
-		final Pointer p = m.getPointer(0);
+	private void testMemory(final MemoryBlock m) {
+		final Pointer p = m.getBegin();
 		p.putUnsignedInt(Memory.MAX_UNSIGNED_INT);
 		assertEquals(Memory.MAX_UNSIGNED_INT, p.getUnsignedInt());
 		assertEquals(Memory.MAX_UNSIGNED_SHORT, p.getUnsignedShort());
@@ -27,19 +28,19 @@ public class MemoryTest {
 
 	@Test
 	public void testArrayMemory() {
-		final ArrayMemory m = new ArrayMemory(1024);
+		final ArrayMemory m = new ArrayMemory(Memory.SIZE_LONG);
 		testMemory(m);
 	}
 
 	@Test
 	public void testBufferMemory() {
-		final BufferMemory m = new BufferMemory(1024);
+		final BufferMemory m = new BufferMemory(Memory.SIZE_LONG);
 		testMemory(m);
 	}
 
 	@Test
 	public void testDirectBufferMemory() {
-		final BufferMemory m = new BufferMemory(1024, true);
+		final BufferMemory m = new BufferMemory(Memory.SIZE_LONG, true);
 		testMemory(m);
 	}
 

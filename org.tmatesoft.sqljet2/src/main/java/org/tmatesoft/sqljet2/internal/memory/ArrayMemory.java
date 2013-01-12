@@ -12,6 +12,10 @@ final public class ArrayMemory extends AbstractMemory {
 		this(new byte[size]);
 	}
 
+	public int getSize() {
+		return array.length;
+	}
+
 	final public byte get(final int address) {
 		return array[address];
 	}

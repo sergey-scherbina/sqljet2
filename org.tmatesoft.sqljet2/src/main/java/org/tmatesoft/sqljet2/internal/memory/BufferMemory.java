@@ -25,6 +25,10 @@ final public class BufferMemory extends AbstractMemory {
 		this(size, false);
 	}
 
+	public int getSize() {
+		return buffer.capacity();
+	}
+
 	final public byte get(final int address) {
 		return buffer.get(address);
 	}

@@ -1,10 +1,12 @@
 package org.tmatesoft.sqljet2.memory;
 
-public interface Pointer extends Memory {
+public interface Pointer extends Memory, Comparable<Pointer> {
 
 	Memory getMemory();
 
 	Pointer getPointer();
+
+	boolean less(Pointer than);
 
 	int getAddress();
 

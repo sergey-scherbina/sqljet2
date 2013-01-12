@@ -3,7 +3,7 @@ package org.tmatesoft.sqljet2.internal.memory;
 import org.tmatesoft.sqljet2.memory.Memory;
 import org.tmatesoft.sqljet2.memory.Pointer;
 
-public class MemoryPointer implements Pointer {
+final public class MemoryPointer implements Pointer {
 
 	private final Memory memory;
 	private int address;
@@ -11,6 +11,27 @@ public class MemoryPointer implements Pointer {
 	public MemoryPointer(final Memory memory, final int address) {
 		this.memory = memory;
 		this.address = address;
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj instanceof MemoryPointer) {
+			final MemoryPointer that = (MemoryPointer) obj;
+			return memory.equals(that.memory) && address == that.address;
+		}
+		return super.equals(obj);
+	}
+
+	public int compareTo(final Pointer that) {
+		if (!memory.equals(that.getMemory())) {
+			throw new IllegalArgumentException(
+					"Pointers from different address spaces aren't comparable");
+		}
+		return address - that.getAddress();
+	}
+
+	public boolean less(final Pointer than) {
+		return compareTo(than) < 0;
 	}
 
 	final public Memory getMemory() {
