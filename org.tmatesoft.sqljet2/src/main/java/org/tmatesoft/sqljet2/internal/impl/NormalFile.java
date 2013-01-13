@@ -78,6 +78,7 @@ public class NormalFile implements FileStream {
 		return SECTOR_SIZE;
 	}
 
+	// TODO mock stub - to implement
 	private LockType lockType = LockType.NONE;
 
 	public LockType getLockType() {

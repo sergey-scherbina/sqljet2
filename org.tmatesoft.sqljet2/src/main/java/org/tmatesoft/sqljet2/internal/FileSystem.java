@@ -11,7 +11,8 @@ public interface FileSystem {
 
 	String getFullPath(String path) throws IOException;
 
-	FileStream open(String path, FileType fileType) throws IOException;
+	FileStream open(String path, FileType fileType, OpenPermission permission)
+			throws IOException;
 
 	boolean delete(File path, boolean sync) throws IOException;
 
@@ -19,6 +20,10 @@ public interface FileSystem {
 			throws IOException;
 
 	String getTempFile() throws IOException;
+
+	enum OpenPermission {
+		READONLY, READWRITE, CREATE
+	}
 
 	enum AccessPermission {
 		EXISTS, READONLY, READWRITE
