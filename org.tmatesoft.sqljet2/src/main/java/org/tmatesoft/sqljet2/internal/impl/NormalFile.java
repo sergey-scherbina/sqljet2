@@ -74,29 +74,32 @@ public class NormalFile implements FileStream {
 		return stream.length();
 	}
 
+	public int getSectorSize() {
+		return SECTOR_SIZE;
+	}
+
+	private LockType lockType = LockType.NONE;
+
 	public LockType getLockType() {
-		// TODO Auto-generated method stub
-		return null;
+		// TODO mock stub - to implement
+		return lockType;
 	}
 
-	public boolean lock(LockType lockType) throws IOException {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean lock(final LockType lockType) throws IOException {
+		// TODO mock stub - to implement
+		this.lockType = lockType;
+		return true;
 	}
 
-	public boolean unlock(LockType lockType) throws IOException {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean unlock(final LockType lockType) throws IOException {
+		// TODO mock stub - to implement
+		this.lockType = lockType;
+		return true;
 	}
 
 	public boolean checkReservedLock() throws IOException {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	public int getSectorSize() {
-		// TODO Auto-generated method stub
-		return 0;
+		// TODO mock stub - to implement
+		return lockType == LockType.RESERVED;
 	}
 
 }
