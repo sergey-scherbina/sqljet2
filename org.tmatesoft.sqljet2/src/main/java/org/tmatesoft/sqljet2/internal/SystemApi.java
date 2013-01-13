@@ -2,7 +2,7 @@ package org.tmatesoft.sqljet2.internal;
 
 import java.nio.ByteBuffer;
 
-public interface System {
+public interface SystemApi {
 
 	FileStream memoryFile();
 
@@ -20,7 +20,7 @@ public interface System {
 
 	MemoryBlock wrap(ByteBuffer buffer);
 
-	byte[] randomness(final int numBytes);
+	byte[] randomness(final int bytesCount);
 
 	long sleep(final long microseconds);
 

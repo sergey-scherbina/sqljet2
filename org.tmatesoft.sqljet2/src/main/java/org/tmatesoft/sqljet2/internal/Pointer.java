@@ -58,4 +58,8 @@ public interface Pointer extends Memory, Comparable<Pointer> {
 
 	void putUnsignedInt(long value);
 
+	void getBytes(byte[] to);
+
+	void putBytes(byte[] from);
+
 }

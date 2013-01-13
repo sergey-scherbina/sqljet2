@@ -59,4 +59,8 @@ public interface Memory {
 
 	Pointer getPointer(int address);
 
+	void getBytes(int address, byte[] to);
+
+	void putBytes(int address, byte[] from);
+
 }

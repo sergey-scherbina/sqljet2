@@ -1,8 +1,11 @@
 package org.tmatesoft.sqljet2.internal.impl;
 
+import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.util.Arrays;
 
-final public class ArrayMemory extends AbstractMemory {
+final public class ArrayMemory extends AbstractMemory implements
+		NormalFile.Streamable {
 
 	private final byte[] array;
 
@@ -50,32 +53,52 @@ final public class ArrayMemory extends AbstractMemory {
 		putLong(this, address, value);
 	}
 
-	final public char getChar(int address) {
+	final public char getChar(final int address) {
 		return getChar(this, address);
 	}
 
-	final public void putChar(int address, char value) {
+	final public void putChar(final int address, final char value) {
 		putChar(this, address, value);
 	}
 
-	final public float getFloat(int address) {
+	final public float getFloat(final int address) {
 		return getFloat(this, address);
 	}
 
-	final public void putFloat(int address, float value) {
+	final public void putFloat(final int address, final float value) {
 		putFloat(this, address, value);
 	}
 
-	final public double getDouble(int address) {
+	final public double getDouble(final int address) {
 		return getDouble(this, address);
 	}
 
-	final public void putDouble(int address, double value) {
+	final public void putDouble(final int address, final double value) {
 		putDouble(this, address, value);
 	}
 
-	final public void fill(byte value) {
+	final public void fill(final byte value) {
 		Arrays.fill(array, value);
+	}
+
+	public void getBytes(final int address, final byte[] to) {
+		System.arraycopy(array, address, to, 0, to.length);
+	}
+
+	public void putBytes(final int address, final byte[] from) {
+		System.arraycopy(from, 0, array, address, from.length);
+	}
+
+	public int read(final int address, final RandomAccessFile stream,
+			final int position, final int count) throws IOException {
+		stream.seek(position);
+		return stream.read(array, address, count);
+	}
+
+	public void write(final int address, final RandomAccessFile stream,
+			final int position, final int count) throws IOException {
+		stream.seek(position);
+		stream.write(array, address, count);
 	}
 
 }

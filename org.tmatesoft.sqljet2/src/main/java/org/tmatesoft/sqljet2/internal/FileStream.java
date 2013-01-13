@@ -14,25 +14,17 @@ public interface FileStream {
 
 	FileType getFileType();
 
-	void open() throws IOException;
-
-	boolean isOpen() throws IOException;
-
 	void close() throws IOException;
 
-	void read(int position, Memory memory, int count) throws IOException;
+	int read(int position, Pointer pointer, int count) throws IOException;
 
-	void write(int position, Memory memory, int count) throws IOException;
-
-	void read(int position, MemoryBlock memory) throws IOException;
-
-	void write(int position, MemoryBlock memory) throws IOException;
+	void write(int position, Pointer pointer, int count) throws IOException;
 
 	void sync(boolean full) throws IOException;
 
 	void truncate(int size) throws IOException;
 
-	void getSize() throws IOException;
+	long getSize() throws IOException;
 
 	LockType getLockType();
 

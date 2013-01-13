@@ -1,10 +1,13 @@
 package org.tmatesoft.sqljet2.internal.impl;
 
+import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Arrays;
 
-final public class BufferMemory extends AbstractMemory {
+final public class BufferMemory extends AbstractMemory implements
+		NormalFile.Streamable {
 
 	private final ByteBuffer buffer;
 
@@ -94,6 +97,36 @@ final public class BufferMemory extends AbstractMemory {
 			for (int i = 0; i < c; i++) {
 				buffer.put(i, value);
 			}
+		}
+	}
+
+	public void getBytes(int address, byte[] to) {
+		buffer.position(address);
+		buffer.get(to);
+	}
+
+	public void putBytes(int address, byte[] from) {
+		buffer.position(address);
+		buffer.put(from);
+	}
+
+	public int read(final int address, final RandomAccessFile stream,
+			final int position, final int count) throws IOException {
+		buffer.position(address).limit(count);
+		try {
+			return stream.getChannel().read(buffer, position);
+		} finally {
+			buffer.clear();
+		}
+	}
+
+	public void write(final int address, final RandomAccessFile stream,
+			final int position, final int count) throws IOException {
+		buffer.position(address).limit(count);
+		try {
+			stream.getChannel().write(buffer, position);
+		} finally {
+			buffer.clear();
 		}
 	}
 

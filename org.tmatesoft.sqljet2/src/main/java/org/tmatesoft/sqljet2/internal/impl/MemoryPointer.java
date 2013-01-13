@@ -234,4 +234,20 @@ final public class MemoryPointer implements Pointer {
 		putUnsignedInt(0, value);
 	}
 
+	public void getBytes(final byte[] to) {
+		memory.getBytes(address, to);
+	}
+
+	public void putBytes(final byte[] from) {
+		memory.putBytes(address, from);
+	}
+
+	public void getBytes(final int offset, final byte[] to) {
+		memory.getBytes(address + offset, to);
+	}
+
+	public void putBytes(final int offset, final byte[] from) {
+		memory.putBytes(address + offset, from);
+	}
+
 }
