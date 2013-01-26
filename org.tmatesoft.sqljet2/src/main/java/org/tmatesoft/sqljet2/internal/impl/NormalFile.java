@@ -19,16 +19,10 @@ public class NormalFile implements FileStream {
 				throws IOException;
 	}
 
-	private final FileType fileType;
 	private final RandomAccessFile stream;
 
-	public NormalFile(final FileType fileType, final RandomAccessFile stream) {
-		this.fileType = fileType;
+	public NormalFile(final RandomAccessFile stream) {
 		this.stream = stream;
-	}
-
-	public FileType getFileType() {
-		return fileType;
 	}
 
 	public void close() throws IOException {

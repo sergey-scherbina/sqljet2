@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 
 import org.tmatesoft.sqljet2.internal.FileStream;
-import org.tmatesoft.sqljet2.internal.FileStream.FileType;
 import org.tmatesoft.sqljet2.internal.FileSystem.OpenPermission;
 import org.tmatesoft.sqljet2.internal.FileSystem;
 
@@ -19,13 +18,13 @@ public class NormalFileSystem implements FileSystem {
 		return new File(path).getAbsolutePath();
 	}
 
-	public FileStream open(final String path, final FileType fileType,
-			final OpenPermission permission) throws IOException {
+	public FileStream open(final String path, final OpenPermission permission)
+			throws IOException {
 		// TODO draft implementation
 		if (path != null) {
-			return new NormalFile(fileType, new RandomAccessFile(path, "rw"));
+			return new NormalFile(new RandomAccessFile(path, "rw"));
 		} else {
-			return open(getTempFile(), fileType, permission);
+			return open(getTempFile(), permission);
 		}
 	}
 

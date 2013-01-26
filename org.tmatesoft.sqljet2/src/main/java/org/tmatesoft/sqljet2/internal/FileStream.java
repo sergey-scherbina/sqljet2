@@ -12,8 +12,6 @@ public interface FileStream {
 	long SHARED_FIRST = (PENDING_BYTE + 2);
 	long SHARED_SIZE = 510;
 
-	FileType getFileType();
-
 	void close() throws IOException;
 
 	int read(int position, Pointer pointer, int count) throws IOException;
@@ -35,23 +33,6 @@ public interface FileStream {
 	boolean checkReservedLock() throws IOException;
 
 	int getSectorSize();
-
-	enum FileType {
-
-		MAIN_DB,
-
-		TEMP_DB,
-
-		TRANSIENT_DB,
-
-		MAIN_JOURNAL,
-
-		TEMP_JOURNAL,
-
-		SUBJOURNAL,
-
-		MASTER_JOURNAL
-	}
 
 	enum LockType {
 
