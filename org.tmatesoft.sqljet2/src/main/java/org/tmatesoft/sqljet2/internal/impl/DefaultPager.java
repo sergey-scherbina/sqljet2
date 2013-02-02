@@ -18,12 +18,12 @@ public class DefaultPager implements Pager {
 	public void open(FileSystem fs, String fileName, OpenPermission permission)
 			throws IOException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void close() throws IOException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public int getPageSize() {
@@ -33,7 +33,7 @@ public class DefaultPager implements Pager {
 
 	public void setPageSize(int pageSize) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public int getPagesCount() throws IOException {

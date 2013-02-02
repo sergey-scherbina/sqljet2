@@ -1,6 +1,6 @@
 package org.tmatesoft.sqljet2.internal;
 
-public interface Page<T extends Page<T>> {
+public interface Page {
 
 	Pager getPager();
 
@@ -32,7 +32,5 @@ public interface Page<T extends Page<T>> {
 	}
 
 	Type getType();
-
-	T getPage();
 
 }

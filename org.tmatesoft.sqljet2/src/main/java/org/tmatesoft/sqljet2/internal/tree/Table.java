@@ -4,11 +4,11 @@ import org.tmatesoft.sqljet2.internal.Page;
 
 public interface Table {
 
-	interface TrunkPage extends Page<TrunkPage> {
+	interface TrunkPage extends Page {
 
 	}
 
-	interface LeafPage extends Page<LeafPage> {
+	interface LeafPage extends Page {
 
 	}
 
