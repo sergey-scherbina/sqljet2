@@ -3,10 +3,11 @@ package org.tmatesoft.sqljet2.internal.impl;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
-import org.tmatesoft.sqljet2.internal.FileStream;
-import org.tmatesoft.sqljet2.internal.Memory;
-import org.tmatesoft.sqljet2.internal.MemoryBlock;
-import org.tmatesoft.sqljet2.internal.Pointer;
+import org.tmatesoft.sqljet2.internal.system.FileStream;
+import org.tmatesoft.sqljet2.internal.system.Memory;
+import org.tmatesoft.sqljet2.internal.system.MemoryBlock;
+import org.tmatesoft.sqljet2.internal.system.Pointer;
+import org.tmatesoft.sqljet2.internal.system.Trouble;
 
 public class NormalFile implements FileStream {
 
@@ -25,47 +26,69 @@ public class NormalFile implements FileStream {
 		this.stream = stream;
 	}
 
-	public void close() throws IOException {
-		stream.close();
-	}
-
-	public int read(int position, Pointer pointer, int count)
-			throws IOException {
-		if (pointer.getMemory() instanceof Streamable) {
-			return ((Streamable) pointer.getMemory()).read(
-					pointer.getAddress(), stream, position, count);
-		} else {
-			final byte[] b = new byte[count];
-			stream.seek(position);
-			final int read = stream.read(b);
-			pointer.putBytes(b);
-			return read;
+	public void close() throws Trouble {
+		try {
+			stream.close();
+		} catch (IOException e) {
+			throw new Trouble(e);
 		}
 	}
 
-	public void write(int position, Pointer pointer, int count)
-			throws IOException {
-		if (pointer.getMemory() instanceof Streamable) {
-			((Streamable) pointer.getMemory()).write(pointer.getAddress(),
-					stream, position, count);
-		} else {
-			final byte[] b = new byte[count];
-			pointer.getBytes(b);
-			stream.seek(position);
-			stream.write(b);
+	public int read(int position, Pointer pointer, int count) throws Trouble {
+		try {
+			if (pointer.getMemory() instanceof Streamable) {
+				return ((Streamable) pointer.getMemory()).read(
+						pointer.getAddress(), stream, position, count);
+			} else {
+				final byte[] b = new byte[count];
+				stream.seek(position);
+				final int read = stream.read(b);
+				pointer.putBytes(b);
+				return read;
+			}
+		} catch (IOException e) {
+			throw new Trouble(e);
 		}
 	}
 
-	public void sync(final boolean full) throws IOException {
-		stream.getChannel().force(full);
+	public void write(int position, Pointer pointer, int count) throws Trouble {
+		try {
+			if (pointer.getMemory() instanceof Streamable) {
+				((Streamable) pointer.getMemory()).write(pointer.getAddress(),
+						stream, position, count);
+			} else {
+				final byte[] b = new byte[count];
+				pointer.getBytes(b);
+				stream.seek(position);
+				stream.write(b);
+			}
+		} catch (IOException e) {
+			throw new Trouble(e);
+		}
 	}
 
-	public void truncate(final int size) throws IOException {
-		stream.setLength(size);
+	public void sync(final boolean full) throws Trouble {
+		try {
+			stream.getChannel().force(full);
+		} catch (IOException e) {
+			throw new Trouble(e);
+		}
 	}
 
-	public long getSize() throws IOException {
-		return stream.length();
+	public void truncate(final int size) throws Trouble {
+		try {
+			stream.setLength(size);
+		} catch (IOException e) {
+			throw new Trouble(e);
+		}
+	}
+
+	public long getSize() throws Trouble {
+		try {
+			return stream.length();
+		} catch (IOException e) {
+			throw new Trouble(e);
+		}
 	}
 
 	public int getSectorSize() {
@@ -80,19 +103,19 @@ public class NormalFile implements FileStream {
 		return lockType;
 	}
 
-	public boolean lock(final LockType lockType) throws IOException {
+	public boolean lock(final LockType lockType) throws Trouble {
 		// TODO mock stub - to implement
 		this.lockType = lockType;
 		return true;
 	}
 
-	public boolean unlock(final LockType lockType) throws IOException {
+	public boolean unlock(final LockType lockType) throws Trouble {
 		// TODO mock stub - to implement
 		this.lockType = lockType;
 		return true;
 	}
 
-	public boolean checkReservedLock() throws IOException {
+	public boolean checkReservedLock() throws Trouble {
 		// TODO mock stub - to implement
 		return lockType == LockType.RESERVED;
 	}

@@ -1,6 +1,6 @@
 package org.tmatesoft.sqljet2.internal.tree;
 
-import org.tmatesoft.sqljet2.internal.Tree;
+import org.tmatesoft.sqljet2.internal.pager.FreeList;
 
 public interface Root extends Tree.Node {
 

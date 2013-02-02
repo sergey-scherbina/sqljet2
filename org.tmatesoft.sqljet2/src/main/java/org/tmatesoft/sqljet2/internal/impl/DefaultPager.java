@@ -1,12 +1,11 @@
 package org.tmatesoft.sqljet2.internal.impl;
 
-import java.io.IOException;
-
-import org.tmatesoft.sqljet2.internal.FileSystem;
-import org.tmatesoft.sqljet2.internal.FileSystem.OpenPermission;
-import org.tmatesoft.sqljet2.internal.Memory;
-import org.tmatesoft.sqljet2.internal.Page;
-import org.tmatesoft.sqljet2.internal.Pager;
+import org.tmatesoft.sqljet2.internal.pager.Page;
+import org.tmatesoft.sqljet2.internal.pager.Pager;
+import org.tmatesoft.sqljet2.internal.system.FileSystem;
+import org.tmatesoft.sqljet2.internal.system.Memory;
+import org.tmatesoft.sqljet2.internal.system.Trouble;
+import org.tmatesoft.sqljet2.internal.system.FileSystem.OpenPermission;
 
 public class DefaultPager implements Pager {
 
@@ -16,12 +15,12 @@ public class DefaultPager implements Pager {
 	private static final int MAX_PAGE_NUMBER = 2147483647;
 
 	public void open(FileSystem fs, String fileName, OpenPermission permission)
-			throws IOException {
+			throws Trouble {
 		// TODO Auto-generated method stub
 
 	}
 
-	public void close() throws IOException {
+	public void close() throws Trouble {
 		// TODO Auto-generated method stub
 
 	}
@@ -36,12 +35,12 @@ public class DefaultPager implements Pager {
 
 	}
 
-	public int getPagesCount() throws IOException {
+	public int getPagesCount() throws Trouble {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
-	public Memory readFileHeader(int count) throws IOException {
+	public Memory readFileHeader(int count) throws Trouble {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -54,6 +53,16 @@ public class DefaultPager implements Pager {
 	public Page lookupPage(int pageNumber) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public int getLockBytePageNumber() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public boolean isLockBytePageNumber() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

@@ -1,8 +1,8 @@
 package org.tmatesoft.sqljet2.internal.impl;
 
-import org.tmatesoft.sqljet2.internal.Memory;
-import org.tmatesoft.sqljet2.internal.MemoryBlock;
-import org.tmatesoft.sqljet2.internal.Pointer;
+import org.tmatesoft.sqljet2.internal.system.Memory;
+import org.tmatesoft.sqljet2.internal.system.MemoryBlock;
+import org.tmatesoft.sqljet2.internal.system.Pointer;
 
 public abstract class AbstractMemory implements MemoryBlock {
 

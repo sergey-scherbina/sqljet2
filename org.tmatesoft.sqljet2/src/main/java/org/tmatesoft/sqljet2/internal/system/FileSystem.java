@@ -1,4 +1,4 @@
-package org.tmatesoft.sqljet2.internal;
+package org.tmatesoft.sqljet2.internal.system;
 
 import java.io.File;
 import java.io.IOException;
@@ -7,16 +7,16 @@ public interface FileSystem {
 
 	String getFileSystemName();
 
-	String getFullPath(String path) throws IOException;
+	String getFullPath(String path) throws Trouble;
 
-	FileStream open(String path, OpenPermission permission) throws IOException;
+	FileStream open(String path, OpenPermission permission) throws Trouble;
 
-	boolean delete(File path, boolean sync) throws IOException;
+	boolean delete(File path, boolean sync) throws Trouble;
 
 	boolean checkPermission(final File path, final AccessPermission permission)
-			throws IOException;
+			throws Trouble;
 
-	String getTempFile() throws IOException;
+	String getTempFile() throws Trouble;
 
 	enum OpenPermission {
 		READONLY, READWRITE, CREATE

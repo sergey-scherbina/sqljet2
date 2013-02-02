@@ -1,4 +1,4 @@
-package org.tmatesoft.sqljet2.internal;
+package org.tmatesoft.sqljet2.internal.system;
 
 import java.nio.ByteBuffer;
 

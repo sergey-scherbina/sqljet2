@@ -1,6 +1,4 @@
-package org.tmatesoft.sqljet2.internal;
-
-import java.io.IOException;
+package org.tmatesoft.sqljet2.internal.system;
 
 public interface FileStream {
 
@@ -12,25 +10,25 @@ public interface FileStream {
 	long SHARED_FIRST = (PENDING_BYTE + 2);
 	long SHARED_SIZE = 510;
 
-	void close() throws IOException;
+	void close() throws Trouble;
 
-	int read(int position, Pointer pointer, int count) throws IOException;
+	int read(int position, Pointer pointer, int count) throws Trouble;
 
-	void write(int position, Pointer pointer, int count) throws IOException;
+	void write(int position, Pointer pointer, int count) throws Trouble;
 
-	void sync(boolean full) throws IOException;
+	void sync(boolean full) throws Trouble;
 
-	void truncate(int size) throws IOException;
+	void truncate(int size) throws Trouble;
 
-	long getSize() throws IOException;
+	long getSize() throws Trouble;
 
 	LockType getLockType();
 
-	boolean lock(LockType lockType) throws IOException;
+	boolean lock(LockType lockType) throws Trouble;
 
-	boolean unlock(final LockType lockType) throws IOException;
+	boolean unlock(final LockType lockType) throws Trouble;
 
-	boolean checkReservedLock() throws IOException;
+	boolean checkReservedLock() throws Trouble;
 
 	int getSectorSize();
 
