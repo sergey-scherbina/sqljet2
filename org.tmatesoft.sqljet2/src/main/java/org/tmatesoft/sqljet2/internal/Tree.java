@@ -1,6 +1,6 @@
 package org.tmatesoft.sqljet2.internal;
 
-import org.tmatesoft.sqljet2.internal.tree.RootPage;
+import org.tmatesoft.sqljet2.internal.tree.Root;
 
 public interface Tree {
 
@@ -8,6 +8,28 @@ public interface Tree {
 
 	void close();
 
-	RootPage getRootPage();
+	Root getRoot();
+
+	interface Node {
+
+		Page getPage();
+
+		Type getType();
+
+		enum Type {
+
+			Root, LockByte,
+
+			FreeListLeaf, FreeListTrunk,
+
+			IndexLeaf, IndexTrunk,
+
+			TableLeaf, TableTrunk,
+
+			Overflow, PointerMap
+
+		}
+
+	}
 
 }

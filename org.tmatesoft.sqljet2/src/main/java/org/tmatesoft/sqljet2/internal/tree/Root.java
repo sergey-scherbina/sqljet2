@@ -1,8 +1,8 @@
 package org.tmatesoft.sqljet2.internal.tree;
 
-import org.tmatesoft.sqljet2.internal.Page;
+import org.tmatesoft.sqljet2.internal.Tree;
 
-public interface RootPage extends Page {
+public interface Root extends Tree.Node {
 
 	interface Header {
 

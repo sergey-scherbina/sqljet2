@@ -1,7 +1,7 @@
 package org.tmatesoft.sqljet2.internal.tree;
 
-import org.tmatesoft.sqljet2.internal.Page;
+import org.tmatesoft.sqljet2.internal.Tree;
 
-public interface PointerMap extends Page {
+public interface PointerMap extends Tree.Node {
 
 }
