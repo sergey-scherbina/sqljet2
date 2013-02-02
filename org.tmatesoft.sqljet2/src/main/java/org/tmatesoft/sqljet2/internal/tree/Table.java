@@ -1,13 +1,12 @@
 package org.tmatesoft.sqljet2.internal.tree;
 
+public interface Table extends Node {
 
-public interface Table {
-
-	interface TrunkPage extends Tree.Node {
+	interface Trunk extends Table {
 
 	}
 
-	interface LeafPage extends Tree.Node {
+	interface Leaf extends Table {
 
 	}
 

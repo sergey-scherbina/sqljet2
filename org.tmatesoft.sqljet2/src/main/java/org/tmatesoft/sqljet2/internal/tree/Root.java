@@ -2,7 +2,7 @@ package org.tmatesoft.sqljet2.internal.tree;
 
 import org.tmatesoft.sqljet2.internal.pager.FreeList;
 
-public interface Root extends Tree.Node {
+public interface Root extends Table {
 
 	interface Header {
 
@@ -12,10 +12,10 @@ public interface Root extends Tree.Node {
 
 	FreeList getFreeList();
 
-	interface SchemaTree extends Table {
+	interface Schema extends Table {
 
 	}
 
-	SchemaTree getSchemaTree();
+	Schema getSchema();
 
 }

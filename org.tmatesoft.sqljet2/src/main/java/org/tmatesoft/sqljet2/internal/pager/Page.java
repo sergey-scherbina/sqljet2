@@ -10,24 +10,6 @@ public interface Page {
 
 	MemoryBlock getData();
 
-	Usage getUsage();
-
-	interface Usage {
-
-		Page getPage();
-
-		Type getUsageType();
-
-		enum Type {
-
-			Root, Node, LockByte,
-
-			FreeListTrunk, FreeListLeaf,
-
-			Overflow, PointerMap
-
-		}
-
-	}
+	PageType getPageType();
 
 }

@@ -1,5 +1,5 @@
 package org.tmatesoft.sqljet2.internal.pager;
 
-public interface PointerMap extends Page.Usage {
+public interface PointerMap extends Page {
 
 }

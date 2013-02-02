@@ -19,15 +19,15 @@ public interface Pager {
 	void setPageSize(int pageSize);
 
 	int getPagesCount() throws Trouble;
-	
+
 	int getLockBytePageNumber();
-	
+
 	boolean isLockBytePageNumber();
 
 	Memory readFileHeader(final int count) throws Trouble;
 
-	Page readPage(int pageNumber);
+	Page readPage(int pageNumber, PageType type);
 
-	Page lookupPage(int pageNumber);
+	Page lookupPage(int pageNumber, PageType type);
 
 }

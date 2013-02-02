@@ -1,6 +1,7 @@
 package org.tmatesoft.sqljet2.internal.impl;
 
 import org.tmatesoft.sqljet2.internal.pager.Page;
+import org.tmatesoft.sqljet2.internal.pager.PageType;
 import org.tmatesoft.sqljet2.internal.pager.Pager;
 import org.tmatesoft.sqljet2.internal.system.FileSystem;
 import org.tmatesoft.sqljet2.internal.system.Memory;
@@ -45,12 +46,12 @@ public class DefaultPager implements Pager {
 		return null;
 	}
 
-	public Page readPage(int pageNumber) {
+	public Page readPage(int pageNumber, PageType type) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public Page lookupPage(int pageNumber) {
+	public Page lookupPage(int pageNumber, PageType type) {
 		// TODO Auto-generated method stub
 		return null;
 	}
