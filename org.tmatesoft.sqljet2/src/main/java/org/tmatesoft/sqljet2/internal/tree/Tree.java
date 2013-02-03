@@ -1,7 +1,7 @@
 package org.tmatesoft.sqljet2.internal.tree;
 
 import org.tmatesoft.sqljet2.internal.system.Trouble;
-import org.tmatesoft.sqljet2.internal.tree.nodes.Root;
+import org.tmatesoft.sqljet2.internal.tree.nodes.RootNode;
 
 public interface Tree {
 
@@ -9,6 +9,6 @@ public interface Tree {
 
 	void close();
 
-	Root getRoot();
+	RootNode getRoot();
 
 }
