@@ -20,7 +20,7 @@ public interface Pager {
 
 	int getLockBytePageNumber();
 
-	boolean isLockBytePageNumber();
+	boolean isLockBytePageNumber(int pageNumber);
 
 	Memory readHeader(final int count) throws Trouble;
 

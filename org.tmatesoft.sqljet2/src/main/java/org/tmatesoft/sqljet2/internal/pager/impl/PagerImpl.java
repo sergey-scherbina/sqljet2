@@ -60,7 +60,7 @@ public class PagerImpl implements Pager {
 		return 0;
 	}
 
-	public boolean isLockBytePageNumber() {
+	public boolean isLockBytePageNumber(int pageNumber) {
 		// TODO Auto-generated method stub
 		return false;
 	}

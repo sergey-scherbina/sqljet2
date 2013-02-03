@@ -9,7 +9,7 @@ import org.tmatesoft.sqljet2.internal.system.FileSystem;
 import org.tmatesoft.sqljet2.internal.system.Trouble;
 import org.tmatesoft.sqljet2.internal.system.FileSystem.OpenPermission;
 
-public class NormalFileSystem implements FileSystem {
+public class DefaultFileSystem implements FileSystem {
 
 	public String getFileSystemName() {
 		return "default";
