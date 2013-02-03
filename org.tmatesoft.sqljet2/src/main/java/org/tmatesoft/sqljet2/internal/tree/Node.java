@@ -1,8 +1,11 @@
 package org.tmatesoft.sqljet2.internal.tree;
 
-import org.tmatesoft.sqljet2.internal.pager.Page;
 
-public interface Node extends Page {
+public interface Node extends TreePage {
+	
+	enum NodeType {
+		Root, TableTrunk, TableLeaf, IndexTrunk, IndexLeaf
+	}
 
 	NodeType getNodeType();
 

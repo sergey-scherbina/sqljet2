@@ -1,6 +1,7 @@
 package org.tmatesoft.sqljet2.internal.pager;
 
 import org.tmatesoft.sqljet2.internal.system.MemoryBlock;
+import org.tmatesoft.sqljet2.internal.tree.TreePage;
 
 public interface Page {
 
@@ -10,6 +11,8 @@ public interface Page {
 
 	MemoryBlock getData();
 
-	PageType getPageType();
+	TreePage getTreePage();
+
+	void setTreePage(TreePage treePage);
 
 }

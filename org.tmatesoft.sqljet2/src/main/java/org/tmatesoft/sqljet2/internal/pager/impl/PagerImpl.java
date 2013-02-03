@@ -1,14 +1,13 @@
 package org.tmatesoft.sqljet2.internal.pager.impl;
 
 import org.tmatesoft.sqljet2.internal.pager.Page;
-import org.tmatesoft.sqljet2.internal.pager.PageType;
 import org.tmatesoft.sqljet2.internal.pager.Pager;
 import org.tmatesoft.sqljet2.internal.system.FileSystem;
 import org.tmatesoft.sqljet2.internal.system.Memory;
 import org.tmatesoft.sqljet2.internal.system.Trouble;
 import org.tmatesoft.sqljet2.internal.system.FileSystem.OpenPermission;
 
-public class DefaultPager implements Pager {
+public class PagerImpl implements Pager {
 
 	private static final int MIN_SECTOR_SIZE = 512;
 	private static final int MAX_SECTOR_SIZE = 0x0100000;
@@ -41,17 +40,17 @@ public class DefaultPager implements Pager {
 		return 0;
 	}
 
-	public Memory readFileHeader(int count) throws Trouble {
+	public Memory readHeader(int count) throws Trouble {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public Page readPage(int pageNumber, PageType type) {
+	public Page readPage(int pageNumber) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public Page lookupPage(int pageNumber, PageType type) {
+	public Page lookupPage(int pageNumber) {
 		// TODO Auto-generated method stub
 		return null;
 	}

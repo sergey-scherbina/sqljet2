@@ -1,11 +1,9 @@
 package org.tmatesoft.sqljet2.internal.pager;
 
-import java.io.IOException;
-
 import org.tmatesoft.sqljet2.internal.system.FileSystem;
+import org.tmatesoft.sqljet2.internal.system.FileSystem.OpenPermission;
 import org.tmatesoft.sqljet2.internal.system.Memory;
 import org.tmatesoft.sqljet2.internal.system.Trouble;
-import org.tmatesoft.sqljet2.internal.system.FileSystem.OpenPermission;
 
 public interface Pager {
 
@@ -24,10 +22,10 @@ public interface Pager {
 
 	boolean isLockBytePageNumber();
 
-	Memory readFileHeader(final int count) throws Trouble;
+	Memory readHeader(final int count) throws Trouble;
 
-	Page readPage(int pageNumber, PageType type);
+	Page readPage(int pageNumber);
 
-	Page lookupPage(int pageNumber, PageType type);
+	Page lookupPage(int pageNumber);
 
 }
