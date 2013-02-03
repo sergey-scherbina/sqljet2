@@ -1,4 +1,4 @@
-package org.tmatesoft.sqljet2.internal.impl;
+package org.tmatesoft.sqljet2.internal.pager.impl;
 
 import org.tmatesoft.sqljet2.internal.pager.Page;
 import org.tmatesoft.sqljet2.internal.pager.PageType;

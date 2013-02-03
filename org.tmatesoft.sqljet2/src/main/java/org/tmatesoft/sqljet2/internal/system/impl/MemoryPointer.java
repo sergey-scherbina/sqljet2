@@ -1,4 +1,4 @@
-package org.tmatesoft.sqljet2.internal.impl;
+package org.tmatesoft.sqljet2.internal.system.impl;
 
 import org.tmatesoft.sqljet2.internal.system.Memory;
 import org.tmatesoft.sqljet2.internal.system.Pointer;

@@ -3,11 +3,11 @@ package org.tmatesoft.sqljet2.test.memory;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
-import org.tmatesoft.sqljet2.internal.impl.ArrayMemory;
-import org.tmatesoft.sqljet2.internal.impl.BufferMemory;
 import org.tmatesoft.sqljet2.internal.system.Memory;
 import org.tmatesoft.sqljet2.internal.system.MemoryBlock;
 import org.tmatesoft.sqljet2.internal.system.Pointer;
+import org.tmatesoft.sqljet2.internal.system.impl.ArrayMemory;
+import org.tmatesoft.sqljet2.internal.system.impl.BufferMemory;
 
 public class MemoryTest {
 

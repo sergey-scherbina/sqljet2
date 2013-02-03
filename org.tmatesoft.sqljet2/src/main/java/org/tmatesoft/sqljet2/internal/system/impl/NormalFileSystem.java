@@ -1,4 +1,4 @@
-package org.tmatesoft.sqljet2.internal.impl;
+package org.tmatesoft.sqljet2.internal.system.impl;
 
 import java.io.File;
 import java.io.IOException;
