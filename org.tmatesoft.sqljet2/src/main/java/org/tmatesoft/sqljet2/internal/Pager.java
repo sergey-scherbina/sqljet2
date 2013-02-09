@@ -1,8 +1,9 @@
-package org.tmatesoft.sqljet2.internal.pager;
+package org.tmatesoft.sqljet2.internal;
 
 import org.tmatesoft.sqljet2.internal.system.FileSystem;
 import org.tmatesoft.sqljet2.internal.system.FileSystem.OpenPermission;
 import org.tmatesoft.sqljet2.internal.system.Memory;
+import org.tmatesoft.sqljet2.internal.system.MemoryBlock;
 import org.tmatesoft.sqljet2.internal.system.Trouble;
 
 public interface Pager {
@@ -28,4 +29,17 @@ public interface Pager {
 
 	Page lookupPage(int pageNumber);
 
+	interface Page {
+
+		Pager getPager();
+
+		int getPageNumber();
+
+		MemoryBlock getData();
+
+		Tree.Page getTreePage();
+
+		void setTreePage(Tree.Page treePage);
+
+	}
 }

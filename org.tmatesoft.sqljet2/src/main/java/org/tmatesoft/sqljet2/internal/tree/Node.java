@@ -1,10 +1,10 @@
-package org.tmatesoft.sqljet2.internal.tree.nodes;
+package org.tmatesoft.sqljet2.internal.tree;
 
+import org.tmatesoft.sqljet2.internal.Tree;
 import org.tmatesoft.sqljet2.internal.system.MemoryBlock;
 import org.tmatesoft.sqljet2.internal.system.VarInt;
-import org.tmatesoft.sqljet2.internal.tree.TreePage;
 
-public interface Node<C extends Node.Cell> extends TreePage {
+public interface Node<C extends Node.Cell> extends Tree.Page {
 
 	enum Type {
 
