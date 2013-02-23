@@ -1,4 +1,4 @@
-package org.tmatesoft.sqljet2.internal;
+package org.tmatesoft.sqljet2.internal.pager;
 
 import org.tmatesoft.sqljet2.internal.system.FileSystem;
 import org.tmatesoft.sqljet2.internal.system.FileSystem.OpenPermission;
@@ -8,8 +8,20 @@ import org.tmatesoft.sqljet2.internal.system.Trouble;
 
 public interface Pager {
 
-	void open(FileSystem fs, String fileName, OpenPermission permission)
-			throws Trouble;
+	int MIN_PAGESIZE = 512;
+	int DEFAULT_PAGESIZE = 1024;
+	int MAX_PAGESIZE = 65536;
+	
+	int MAX_PAGENUMBER = 2147483647;
+	
+	int LOCKPAGE_BEGIN = 1073741824;
+	int LOCKPAGE_END = LOCKPAGE_BEGIN + MIN_PAGESIZE;
+	
+	PagerCache getPagerCache();
+	
+	FileSystem getFileSystem();
+	
+	void open(String fileName, OpenPermission permission) throws Trouble;
 
 	void close() throws Trouble;
 
@@ -23,23 +35,10 @@ public interface Pager {
 
 	boolean isLockBytePageNumber(int pageNumber);
 
-	Memory readHeader(final int count) throws Trouble;
+	MemoryBlock readHeader(final int count) throws Trouble;
 
-	Page readPage(int pageNumber);
+	Page readPage(int pageNumber) throws Trouble;
 
 	Page lookupPage(int pageNumber);
 
-	interface Page {
-
-		Pager getPager();
-
-		int getPageNumber();
-
-		MemoryBlock getData();
-
-		Tree.Page getTreePage();
-
-		void setTreePage(Tree.Page treePage);
-
-	}
 }
