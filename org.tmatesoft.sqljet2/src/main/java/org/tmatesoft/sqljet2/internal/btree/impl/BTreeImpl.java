@@ -1,16 +1,16 @@
-package org.tmatesoft.sqljet2.internal.tree.impl;
+package org.tmatesoft.sqljet2.internal.btree.impl;
 
 import org.tmatesoft.sqljet2.internal.btree.BTree;
 import org.tmatesoft.sqljet2.internal.pager.Pager;
 import org.tmatesoft.sqljet2.internal.system.Pointer;
 
-public class TreeImpl implements BTree {
+public class BTreeImpl implements BTree {
 	
 	private final Pager pager;
 	
 	private final int rootPageNumber;
 	
-	public TreeImpl(final Pager pager, final int rootPageNumber) {
+	public BTreeImpl(final Pager pager, final int rootPageNumber) {
 		this.pager = pager;
 		this.rootPageNumber = rootPageNumber;
 	}
