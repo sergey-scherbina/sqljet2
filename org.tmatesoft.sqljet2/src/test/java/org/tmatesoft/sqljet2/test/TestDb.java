@@ -25,7 +25,7 @@ public class TestDb {
 				new DefaultFileSystem());
 		pager.open(TEST_DB, OpenPermission.READONLY);
 		try {
-			final BTreeTable table = new BTreeTableImpl(pager, 0);
+			final BTreeTable table = new BTreeTableImpl(pager, 1);
 			table.begin();
 			do {
 				final BTreeRecordImpl r = new BTreeRecordImpl(table.getCell());

@@ -1,4 +1,4 @@
-package org.tmatesoft.sqljet2.internal.btree;
+package org.tmatesoft.sqljet2.internal.btree.impl;
 
 import org.tmatesoft.sqljet2.internal.pager.Page;
 import org.tmatesoft.sqljet2.internal.system.Pointer;
@@ -25,8 +25,8 @@ public class BTreePage {
 
 	public static final byte TRUNK_INDEX = 2;
 	public static final byte TRUNK_TABLE = 5;
-	public static final byte LEAF_INDEX = 13;
-	public static final byte LEAF_TABLE = 15;
+	public static final byte LEAF_INDEX = 10;
+	public static final byte LEAF_TABLE = 13;
 
 	public static final int HEADER_SIZE_LEAFPAGE = 8;
 	public static final int HEADER_SIZE_TRUNKPAGE = 12;
@@ -127,7 +127,7 @@ public class BTreePage {
 
 	public int getCellOffset(int cellNumber) {
 		return getData().getUnsignedShort(
-				getHeaderSize() + 2 * (cellNumber - 1));
+				getHeaderSize() + 2 * cellNumber );
 	}
 	
 	public Pointer getCell(int cellNumber) {

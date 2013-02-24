@@ -90,7 +90,7 @@ public class PagerImpl implements Pager {
 			}
 		}
 		{
-			final MemoryBlock data = read(pageNumber * pageSize, pageSize);
+			final MemoryBlock data = read(pageSize * (pageNumber - 1), pageSize);
 			final Page page = new PageImpl(this, pageNumber, data);
 			cache.putPage(page);
 			return page;
