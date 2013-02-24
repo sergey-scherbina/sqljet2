@@ -37,10 +37,10 @@ public class BTreeTableImpl extends BTreeImpl implements BTreeTable {
 
 	@Override
 	public Pointer getCell() {
-		if (cell != null)
-			return cell;
-		cell = super.getCell();
-		parseCell();
+		if (cell == null) {
+			cell = super.getCell();
+			parseCell();
+		}
 		return cell;
 	}
 

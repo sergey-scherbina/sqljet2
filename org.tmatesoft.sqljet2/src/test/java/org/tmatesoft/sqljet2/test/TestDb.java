@@ -31,7 +31,7 @@ public class TestDb {
 				final BTreeRecordImpl r = new BTreeRecordImpl(
 						table.getNotOverflowData());
 				for (int i = 0; i < r.getColumnsCount(); i++) {
-					System.out.println(r.getValue(i).toString());
+					System.out.println(r.getValue(i));
 				}
 				System.out.println();
 			} while (table.next());

@@ -53,7 +53,7 @@ public class BTreePage {
 		this.parent = parent;
 		this.parentCellNumber = parentCellNumber;
 		this.page = page;
-		this.data = page.getData().getPointer(getHeaderOffset());
+		this.data = page.getData().getBegin();
 	}
 
 	public BTreePage getParent() {
@@ -68,16 +68,44 @@ public class BTreePage {
 		return page;
 	}
 
-	public final int getHeaderOffset() {
-		return page.getPageNumber() == ROOT_PAGENUMBER ? ROOT_HEADER : 0;
-	}
-
 	public Pointer getData() {
 		return data;
 	}
 
+	public final int getHeaderOffset() {
+		return page.getPageNumber() == ROOT_PAGENUMBER ? ROOT_HEADER : 0;
+	}
+
 	public byte getPageType() {
-		return getData().getByte(HEADER_OFFSET_PAGETYPE);
+		return getData().getByte(getHeaderOffset() + HEADER_OFFSET_PAGETYPE);
+	}
+
+	public int getFirstFreeBlockOffset() {
+		return getData().getUnsignedShort(
+				getHeaderOffset() + HEADER_OFFSET_FIRSTFREEBLOCKOFFSET);
+	}
+
+	public int getCellsCount() {
+		return getData().getUnsignedShort(
+				getHeaderOffset() + HEADER_OFFSET_CELLSCOUNT);
+	}
+
+	public int getCellsAreaOffset() {
+		return getData().getUnsignedShort(
+				getHeaderOffset() + HEADER_OFFSET_CELLSAREAOFFSET);
+	}
+
+	public short getFragmentedBytesCount() {
+		return getData().getUnsignedByte(
+				getHeaderOffset() + HEADER_OFFSET_FRAGMENTEDBYTESCOUNT);
+	}
+
+	public int getRightMostChildPageNumber() throws Trouble {
+		if (isTrunkPage()) {
+			return getData()
+					.getInt(getHeaderOffset() + HEADER_OFFSET_RIGHTMOST);
+		}
+		throw new Trouble(Code.ERROR);
 	}
 
 	public boolean isTrunkPage() {
@@ -102,34 +130,11 @@ public class BTreePage {
 		return isTrunkPage() ? HEADER_SIZE_TRUNKPAGE : HEADER_SIZE_LEAFPAGE;
 	}
 
-	public int getFirstFreeBlockOffset() {
-		return getData().getUnsignedShort(HEADER_OFFSET_FIRSTFREEBLOCKOFFSET);
-	}
-
-	public int getCellsCount() {
-		return getData().getUnsignedShort(HEADER_OFFSET_CELLSCOUNT);
-	}
-
-	public int getCellsAreaOffset() {
-		return getData().getUnsignedShort(HEADER_OFFSET_CELLSAREAOFFSET);
-	}
-
-	public short getFragmentedBytesCount() {
-		return getData().getUnsignedByte(HEADER_OFFSET_FRAGMENTEDBYTESCOUNT);
-	}
-
-	public int getRightMostChildPageNumber() throws Trouble {
-		if (isTrunkPage()) {
-			return getData().getInt(HEADER_OFFSET_RIGHTMOST);
-		}
-		throw new Trouble(Code.ERROR);
-	}
-
 	public int getCellOffset(int cellNumber) {
 		return getData().getUnsignedShort(
-				getHeaderSize() + 2 * cellNumber );
+				getHeaderOffset() + getHeaderSize() + cellNumber * 2);
 	}
-	
+
 	public Pointer getCell(int cellNumber) {
 		return getData().getPointer(getCellOffset(cellNumber));
 	}
@@ -142,18 +147,17 @@ public class BTreePage {
 
 	public int getChildPageNumber(final int cellNumber) throws Trouble {
 		assert (isTrunkPage());
-		if(cellNumber < getCellsCount()) {
+		if (cellNumber < getCellsCount()) {
 			return getData().getInt(getCellOffset(cellNumber));
 		} else {
-			return getRightMostChildPageNumber() ;
+			return getRightMostChildPageNumber();
 		}
 	}
 
 	public BTreePage getChildPage(final int cellNumber) throws Trouble {
 		assert (isTrunkPage());
 		final int childPageNumber = getChildPageNumber(cellNumber);
-		final Page childPage = getPage().getPager().readPage(
-				childPageNumber);
+		final Page childPage = getPage().getPager().readPage(childPageNumber);
 		return new BTreePage(childPage, this, cellNumber);
 	}
 
