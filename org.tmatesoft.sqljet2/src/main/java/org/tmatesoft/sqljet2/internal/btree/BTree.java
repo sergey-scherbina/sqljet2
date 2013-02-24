@@ -14,7 +14,7 @@ public interface BTree {
 
 	void end();
 	
-	boolean next();
+	boolean next() throws Trouble;
 	
 	boolean prev();
 	

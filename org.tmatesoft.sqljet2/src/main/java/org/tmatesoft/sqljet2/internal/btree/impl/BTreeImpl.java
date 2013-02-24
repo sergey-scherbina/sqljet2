@@ -14,15 +14,16 @@ public class BTreeImpl implements BTree {
 	
 	private final int rootPageNumber;
 	
-	private final Stack<BTreePage> stack = new Stack<BTreePage>();
-	
 	private final BTreePage rootPage;
+
+	private BTreePage leafPage = null;
+	
+	private int leafCellNumber = 0;
 	
 	public BTreeImpl(final Pager pager, final int rootPageNumber) throws Trouble {
 		this.pager = pager;
 		this.rootPageNumber = rootPageNumber;
 		this.rootPage = new BTreePage(pager.readPage(rootPageNumber));
-		stack.push(rootPage);
 	}
 
 	public Pager getPager() {
@@ -34,18 +35,22 @@ public class BTreeImpl implements BTree {
 	}
 
 	public void begin() throws Trouble {
-		stack.clear();
-		stack.push(rootPage);
+		leafCellNumber = 0;
+		leafPage = rootPage.getFirstLeafPage();
 	}
-
+	
 	public void end() {
 		// TODO Auto-generated method stub
 
 	}
 
-	public boolean next() {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean next() throws Trouble {
+		leafCellNumber++;
+		if(leafCellNumber>leafPage.getCellsCount()) {
+			leafCellNumber = 0;
+			leafPage = leafPage.getNextLeafPage();
+		}
+		return leafPage!=null;
 	}
 
 	public boolean prev() {
@@ -54,8 +59,7 @@ public class BTreeImpl implements BTree {
 	}
 
 	public Pointer getCell() {
-		// TODO Auto-generated method stub
-		return null;
+		return leafPage.getCell(leafCellNumber);
 	}
 
 }
