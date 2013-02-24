@@ -14,9 +14,9 @@ public interface Pointer extends Memory, Comparable<Pointer> {
 
 	void move(int offset);
 
-	byte get();
+	byte getByte();
 
-	void put(byte value);
+	void putByte(byte value);
 
 	short getShort();
 

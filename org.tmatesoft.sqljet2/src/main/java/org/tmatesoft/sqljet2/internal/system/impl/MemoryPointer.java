@@ -58,12 +58,12 @@ final public class MemoryPointer implements Pointer {
 		return getPointer(0);
 	}
 
-	final public byte get(final int offset) {
-		return memory.get(this.address + offset);
+	final public byte getByte(final int offset) {
+		return memory.getByte(this.address + offset);
 	}
 
-	final public void put(final int offset, final byte value) {
-		memory.put(this.address + offset, value);
+	final public void putByte(final int offset, final byte value) {
+		memory.putByte(this.address + offset, value);
 	}
 
 	final public short getShort(final int offset) {
@@ -146,12 +146,12 @@ final public class MemoryPointer implements Pointer {
 		memory.putUnsignedInt(this.address + offset, value);
 	}
 
-	final public byte get() {
-		return get(0);
+	final public byte getByte() {
+		return getByte(0);
 	}
 
-	final public void put(final byte value) {
-		put(0, value);
+	final public void putByte(final byte value) {
+		putByte(0, value);
 	}
 
 	final public short getShort() {

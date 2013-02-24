@@ -21,11 +21,11 @@ final public class ArrayMemory extends AbstractMemory implements
 		return array.length;
 	}
 
-	final public byte get(final int address) {
+	final public byte getByte(final int address) {
 		return array[address];
 	}
 
-	final public void put(final int address, final byte value) {
+	final public void putByte(final int address, final byte value) {
 		array[address] = value;
 	}
 

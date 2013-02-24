@@ -2,6 +2,7 @@ package org.tmatesoft.sqljet2.internal.btree;
 
 import org.tmatesoft.sqljet2.internal.pager.Pager;
 import org.tmatesoft.sqljet2.internal.system.Pointer;
+import org.tmatesoft.sqljet2.internal.system.Trouble;
 
 public interface BTree {
 
@@ -9,7 +10,7 @@ public interface BTree {
 	
 	int getRootPageNumber();
 	
-	void begin();
+	void begin() throws Trouble;
 
 	void end();
 	

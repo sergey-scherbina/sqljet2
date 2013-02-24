@@ -44,94 +44,94 @@ public abstract class AbstractMemory implements MemoryBlock {
 	}
 
 	final public static char getChar(final Memory m, final int a) {
-		return (char) (((m.get(a + 1) & U_BYTE)) | ((m.get(a) & U_BYTE) << 8));
+		return (char) (((m.getByte(a + 1) & U_BYTE)) | ((m.getByte(a) & U_BYTE) << 8));
 	}
 
 	final public static short getShort(final Memory m, final int a) {
-		return (short) (((m.get(a + 1) & U_BYTE)) | ((m.get(a) & U_BYTE) << 8));
+		return (short) (((m.getByte(a + 1) & U_BYTE)) | ((m.getByte(a) & U_BYTE) << 8));
 	}
 
 	final public static int getInt(final Memory m, final int a) {
-		return ((m.get(a + 3) & U_BYTE)) | ((m.get(a + 2) & U_BYTE) << 8)
-				| ((m.get(a + 1) & U_BYTE) << 16) | ((m.get(a) & U_BYTE) << 24);
+		return ((m.getByte(a + 3) & U_BYTE)) | ((m.getByte(a + 2) & U_BYTE) << 8)
+				| ((m.getByte(a + 1) & U_BYTE) << 16) | ((m.getByte(a) & U_BYTE) << 24);
 	}
 
 	final public static float getFloat(final Memory m, final int a) {
-		final int i = ((m.get(a + 3) & U_BYTE))
-				| ((m.get(a + 2) & U_BYTE) << 8)
-				| ((m.get(a + 1) & U_BYTE) << 16) + ((m.get(a) & U_BYTE) << 24);
+		final int i = ((m.getByte(a + 3) & U_BYTE))
+				| ((m.getByte(a + 2) & U_BYTE) << 8)
+				| ((m.getByte(a + 1) & U_BYTE) << 16) + ((m.getByte(a) & U_BYTE) << 24);
 		return Float.intBitsToFloat(i);
 	}
 
 	final public static long getLong(final Memory m, final int a) {
-		return ((m.get(a + 7) & U_BYTE_L)) | ((m.get(a + 6) & U_BYTE_L) << 8)
-				| ((m.get(a + 5) & U_BYTE_L) << 16)
-				+ ((m.get(a + 4) & U_BYTE_L) << 24)
-				| ((m.get(a + 3) & U_BYTE_L) << 32)
-				| ((m.get(a + 2) & U_BYTE_L) << 40)
-				+ ((m.get(a + 1) & U_BYTE_L) << 48)
-				| ((m.get(a) & U_BYTE_L) << 56);
+		return ((m.getByte(a + 7) & U_BYTE_L)) | ((m.getByte(a + 6) & U_BYTE_L) << 8)
+				| ((m.getByte(a + 5) & U_BYTE_L) << 16)
+				+ ((m.getByte(a + 4) & U_BYTE_L) << 24)
+				| ((m.getByte(a + 3) & U_BYTE_L) << 32)
+				| ((m.getByte(a + 2) & U_BYTE_L) << 40)
+				+ ((m.getByte(a + 1) & U_BYTE_L) << 48)
+				| ((m.getByte(a) & U_BYTE_L) << 56);
 	}
 
 	final public static double getDouble(final Memory m, final int a) {
-		final long j = ((m.get(a + 7) & U_BYTE_L))
-				| ((m.get(a + 6) & U_BYTE_L) << 8)
-				| ((m.get(a + 5) & U_BYTE_L) << 16)
-				+ ((m.get(a + 4) & U_BYTE_L) << 24)
-				| ((m.get(a + 3) & U_BYTE_L) << 32)
-				| ((m.get(a + 2) & U_BYTE_L) << 40)
-				+ ((m.get(a + 1) & U_BYTE_L) << 48)
-				| ((m.get(a) & U_BYTE_L) << 56);
+		final long j = ((m.getByte(a + 7) & U_BYTE_L))
+				| ((m.getByte(a + 6) & U_BYTE_L) << 8)
+				| ((m.getByte(a + 5) & U_BYTE_L) << 16)
+				+ ((m.getByte(a + 4) & U_BYTE_L) << 24)
+				| ((m.getByte(a + 3) & U_BYTE_L) << 32)
+				| ((m.getByte(a + 2) & U_BYTE_L) << 40)
+				+ ((m.getByte(a + 1) & U_BYTE_L) << 48)
+				| ((m.getByte(a) & U_BYTE_L) << 56);
 		return Double.longBitsToDouble(j);
 	}
 
 	final public static void putChar(final Memory m, final int a, final char v) {
-		m.put(a + 1, (byte) (v));
-		m.put(a, (byte) (v >>> 8));
+		m.putByte(a + 1, (byte) (v));
+		m.putByte(a, (byte) (v >>> 8));
 	}
 
 	final public static void putShort(final Memory m, final int a, final short v) {
-		m.put(a + 1, (byte) (v));
-		m.put(a, (byte) (v >>> 8));
+		m.putByte(a + 1, (byte) (v));
+		m.putByte(a, (byte) (v >>> 8));
 	}
 
 	final public static void putInt(final Memory m, final int a, final int v) {
-		m.put(a + 3, (byte) (v));
-		m.put(a + 2, (byte) (v >>> 8));
-		m.put(a + 1, (byte) (v >>> 16));
-		m.put(a, (byte) (v >>> 24));
+		m.putByte(a + 3, (byte) (v));
+		m.putByte(a + 2, (byte) (v >>> 8));
+		m.putByte(a + 1, (byte) (v >>> 16));
+		m.putByte(a, (byte) (v >>> 24));
 	}
 
 	final public static void putFloat(final Memory m, final int a, final float v) {
 		final int i = Float.floatToIntBits(v);
-		m.put(a + 3, (byte) (i));
-		m.put(a + 2, (byte) (i >>> 8));
-		m.put(a + 1, (byte) (i >>> 16));
-		m.put(a, (byte) (i >>> 24));
+		m.putByte(a + 3, (byte) (i));
+		m.putByte(a + 2, (byte) (i >>> 8));
+		m.putByte(a + 1, (byte) (i >>> 16));
+		m.putByte(a, (byte) (i >>> 24));
 	}
 
 	final public static void putLong(final Memory m, final int a, final long v) {
-		m.put(a + 7, (byte) (v));
-		m.put(a + 6, (byte) (v >>> 8));
-		m.put(a + 5, (byte) (v >>> 16));
-		m.put(a + 4, (byte) (v >>> 24));
-		m.put(a + 3, (byte) (v >>> 32));
-		m.put(a + 2, (byte) (v >>> 40));
-		m.put(a + 1, (byte) (v >>> 48));
-		m.put(a, (byte) (v >>> 56));
+		m.putByte(a + 7, (byte) (v));
+		m.putByte(a + 6, (byte) (v >>> 8));
+		m.putByte(a + 5, (byte) (v >>> 16));
+		m.putByte(a + 4, (byte) (v >>> 24));
+		m.putByte(a + 3, (byte) (v >>> 32));
+		m.putByte(a + 2, (byte) (v >>> 40));
+		m.putByte(a + 1, (byte) (v >>> 48));
+		m.putByte(a, (byte) (v >>> 56));
 	}
 
 	final public static void putDouble(final Memory m, final int a,
 			final double v) {
 		final long j = Double.doubleToLongBits(v);
-		m.put(a + 7, (byte) (j));
-		m.put(a + 6, (byte) (j >>> 8));
-		m.put(a + 5, (byte) (j >>> 16));
-		m.put(a + 4, (byte) (j >>> 24));
-		m.put(a + 3, (byte) (j >>> 32));
-		m.put(a + 2, (byte) (j >>> 40));
-		m.put(a + 1, (byte) (j >>> 48));
-		m.put(a, (byte) (j >>> 56));
+		m.putByte(a + 7, (byte) (j));
+		m.putByte(a + 6, (byte) (j >>> 8));
+		m.putByte(a + 5, (byte) (j >>> 16));
+		m.putByte(a + 4, (byte) (j >>> 24));
+		m.putByte(a + 3, (byte) (j >>> 32));
+		m.putByte(a + 2, (byte) (j >>> 40));
+		m.putByte(a + 1, (byte) (j >>> 48));
+		m.putByte(a, (byte) (j >>> 56));
 	}
 
 	final public Pointer getPointer(final int address) {
@@ -147,19 +147,19 @@ public abstract class AbstractMemory implements MemoryBlock {
 	}
 
 	final public boolean getBoolean(final int address) {
-		return toBoolean(get(address));
+		return toBoolean(getByte(address));
 	}
 
 	final public void putBoolean(final int address, final boolean value) {
-		put(address, fromBoolean(value));
+		putByte(address, fromBoolean(value));
 	}
 
 	final public short getUnsignedByte(final int address) {
-		return toUnsignedByte(get(address));
+		return toUnsignedByte(getByte(address));
 	}
 
 	final public void putUnsignedByte(final int address, final short value) {
-		put(address, fromUnsignedByte(value));
+		putByte(address, fromUnsignedByte(value));
 	}
 
 	final public int getUnsignedShort(final int address) {

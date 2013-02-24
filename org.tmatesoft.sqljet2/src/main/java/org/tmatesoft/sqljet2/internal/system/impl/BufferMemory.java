@@ -33,11 +33,11 @@ final public class BufferMemory extends AbstractMemory implements
 		return buffer.capacity();
 	}
 
-	final public byte get(final int address) {
+	final public byte getByte(final int address) {
 		return buffer.get(address);
 	}
 
-	final public void put(final int address, final byte value) {
+	final public void putByte(final int address, final byte value) {
 		buffer.put(address, value);
 	}
 

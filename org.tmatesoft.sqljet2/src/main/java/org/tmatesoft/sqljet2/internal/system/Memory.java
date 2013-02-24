@@ -13,9 +13,9 @@ public interface Memory {
 	int SIZE_FLOAT = 4;
 	int SIZE_DOUBLE = 8;
 
-	byte get(int address);
+	byte getByte(int address);
 
-	void put(int address, byte value);
+	void putByte(int address, byte value);
 
 	short getShort(int address);
 
