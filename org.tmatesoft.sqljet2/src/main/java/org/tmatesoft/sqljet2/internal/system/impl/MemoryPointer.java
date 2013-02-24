@@ -51,7 +51,7 @@ final public class MemoryPointer implements Pointer {
 	}
 
 	final public Pointer getPointer(final int offset) {
-		return memory.getPointer(offset);
+		return memory.getPointer(address + offset);
 	}
 
 	final public Pointer getPointer() {

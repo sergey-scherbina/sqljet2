@@ -28,10 +28,12 @@ public class TestDb {
 			final BTreeTable table = new BTreeTableImpl(pager, 1);
 			table.begin();
 			do {
-				final BTreeRecordImpl r = new BTreeRecordImpl(table.getCell());
+				final BTreeRecordImpl r = new BTreeRecordImpl(
+						table.getNotOverflowData());
 				for (int i = 0; i < r.getColumnsCount(); i++) {
 					System.out.println(r.getValue(i).toString());
 				}
+				System.out.println();
 			} while (table.next());
 		} finally {
 			pager.close();
