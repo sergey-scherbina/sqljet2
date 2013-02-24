@@ -3,6 +3,7 @@ package org.tmatesoft.sqljet2.internal.btree.impl;
 import java.util.Stack;
 
 import org.tmatesoft.sqljet2.internal.btree.BTree;
+import org.tmatesoft.sqljet2.internal.btree.BTreePage;
 import org.tmatesoft.sqljet2.internal.pager.Page;
 import org.tmatesoft.sqljet2.internal.pager.Pager;
 import org.tmatesoft.sqljet2.internal.system.Pointer;
@@ -32,6 +33,10 @@ public class BTreeImpl implements BTree {
 
 	public int getRootPageNumber() {
 		return rootPageNumber;
+	}
+	
+	public BTreePage getRootPage() {
+		return rootPage;
 	}
 
 	public void begin() throws Trouble {
