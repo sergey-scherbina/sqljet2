@@ -1,8 +1,8 @@
-package org.tmatesoft.sqljet2.internal.btree.impl;
+package org.tmatesoft.sqljet2.internal.btree;
 
 import org.tmatesoft.sqljet2.internal.system.Pointer;
 
-public interface BTreeTable {
+public interface BTreeTable extends BTree {
 
 	Pointer getCell();
 

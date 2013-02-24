@@ -155,11 +155,7 @@ public class BTreeRecordImpl implements BTreeRecord {
 				final int size = (type - 13) / 2;
 				byte[] b = new byte[size];
 				pointer.getBytes(offset, b);
-				try {
-					return new String(b, "US-ASCII");
-				} catch (UnsupportedEncodingException e) {
-					throw new Trouble(e);
-				}
+				return new String(b);
 			}
 		}
 		throw new Trouble(Code.ERROR);

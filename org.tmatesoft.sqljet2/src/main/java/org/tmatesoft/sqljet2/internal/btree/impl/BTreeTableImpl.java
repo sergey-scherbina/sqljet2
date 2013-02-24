@@ -1,5 +1,6 @@
 package org.tmatesoft.sqljet2.internal.btree.impl;
 
+import org.tmatesoft.sqljet2.internal.btree.BTreeTable;
 import org.tmatesoft.sqljet2.internal.pager.Pager;
 import org.tmatesoft.sqljet2.internal.system.Pointer;
 import org.tmatesoft.sqljet2.internal.system.Trouble;
