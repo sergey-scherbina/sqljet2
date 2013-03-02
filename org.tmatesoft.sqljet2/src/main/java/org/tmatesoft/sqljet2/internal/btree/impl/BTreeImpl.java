@@ -49,10 +49,9 @@ public class BTreeImpl implements BTree {
 	}
 
 	public boolean next() throws Trouble {
-		leafCellNumber++;
-		if(leafCellNumber>leafPage.getCellsCount()) {
-			leafCellNumber = 0;
+		if(++leafCellNumber>=leafPage.getCellsCount()) {
 			leafPage = leafPage.getNextLeafPage();
+			leafCellNumber = 0;
 		}
 		return leafPage!=null;
 	}
