@@ -1,11 +1,7 @@
 package org.tmatesoft.sqljet2.test;
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
-import org.tmatesoft.sqljet2.internal.btree.BTree;
 import org.tmatesoft.sqljet2.internal.btree.BTreeTable;
-import org.tmatesoft.sqljet2.internal.btree.impl.BTreeImpl;
 import org.tmatesoft.sqljet2.internal.btree.impl.BTreeRecordImpl;
 import org.tmatesoft.sqljet2.internal.btree.impl.BTreeTableImpl;
 import org.tmatesoft.sqljet2.internal.pager.Pager;
@@ -20,7 +16,7 @@ public class TestDb {
 	private final static String TEST_DB = "src/test/resources/db/testdb.sqlite";
 
 	@Test
-	public void testDb() throws Trouble {
+	public void testForward() throws Trouble {
 		final Pager pager = new PagerImpl(new PagerCacheImpl(),
 				new DefaultFileSystem());
 		pager.open(TEST_DB, OpenPermission.READONLY);
@@ -35,6 +31,27 @@ public class TestDb {
 				}
 				System.out.println();
 			} while (table.next());
+		} finally {
+			pager.close();
+		}
+	}
+
+	@Test
+	public void testBackward() throws Trouble {
+		final Pager pager = new PagerImpl(new PagerCacheImpl(),
+				new DefaultFileSystem());
+		pager.open(TEST_DB, OpenPermission.READONLY);
+		try {
+			final BTreeTable table = new BTreeTableImpl(pager, 1);
+			table.end();
+			do {
+				final BTreeRecordImpl r = new BTreeRecordImpl(
+						table.getNotOverflowData());
+				for (int i = 0; i < r.getColumnsCount(); i++) {
+					System.out.println(r.getValue(i));
+				}
+				System.out.println();
+			} while (table.prev());
 		} finally {
 			pager.close();
 		}

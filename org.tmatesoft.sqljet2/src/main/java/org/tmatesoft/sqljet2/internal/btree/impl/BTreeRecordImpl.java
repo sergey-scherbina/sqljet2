@@ -27,16 +27,23 @@ public class BTreeRecordImpl implements BTreeRecord {
 	}
 
 	private void parse() throws Trouble {
-		headerSize = (int) VarInt.varInt.getValue(pointer, 0);
-		columnsTypes = parseColumns(pointer, headerSize,
-				VarInt.varInt.getBytesCount(headerSize), 0);
-		columnsCount = columnsTypes.length;
-		columnsOffsets = new int[columnsCount];
-		values = new Object[columnsCount];
-		int offset = headerSize;
-		for (int i = 0; i < columnsCount; i++) {
-			columnsOffsets[i] = offset;
-			offset += getTypeSize(columnsTypes[i]);
+		if (pointer == null) {
+			headerSize = 0;
+			columnsTypes = new int[0];
+			columnsOffsets = new int[0];
+			values = new Object[0];
+		} else {
+			headerSize = (int) VarInt.varInt.getValue(pointer, 0);
+			columnsTypes = parseColumns(pointer, headerSize,
+					VarInt.varInt.getBytesCount(headerSize), 0);
+			columnsCount = columnsTypes.length;
+			columnsOffsets = new int[columnsCount];
+			values = new Object[columnsCount];
+			int offset = headerSize;
+			for (int i = 0; i < columnsCount; i++) {
+				columnsOffsets[i] = offset;
+				offset += getTypeSize(columnsTypes[i]);
+			}
 		}
 	}
 

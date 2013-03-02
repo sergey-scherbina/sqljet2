@@ -12,12 +12,14 @@ public interface BTree {
 	
 	void begin() throws Trouble;
 
-	void end();
+	void end() throws Trouble;
 	
 	boolean next() throws Trouble;
 	
-	boolean prev();
+	boolean prev() throws Trouble;
 	
 	Pointer getCell();
+	
+	boolean isEmpty();
 
 }

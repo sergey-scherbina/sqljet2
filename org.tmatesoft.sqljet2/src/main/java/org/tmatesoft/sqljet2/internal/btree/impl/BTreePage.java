@@ -140,13 +140,34 @@ public class BTreePage {
 	}
 
 	public BTreePage getFirstLeafPage() throws Trouble {
-		if (isLeafPage())
-			return this;
-		return getChildPage(0).getFirstLeafPage();
+		if (isLeafPage()) {
+			if (getParent() == null) {
+				return this;
+			} else {
+				return getParent().getFirstLeafPage();
+			}
+		} else {
+			return getChildPage(0).getFirstLeafPage();
+		}
+	}
+
+	public BTreePage getLastLeafPage() throws Trouble {
+		if (isLeafPage()) {
+			if (getParent() == null) {
+				return this;
+			} else {
+				return getParent().getLastLeafPage();
+			}
+		} else {
+			return getChildPage(getCellsCount()).getLastLeafPage();
+		}
 	}
 
 	public int getChildPageNumber(final int cellNumber) throws Trouble {
 		assert (isTrunkPage());
+		if (cellNumber <= 0) {
+			return 0;
+		}
 		if (cellNumber < getCellsCount()) {
 			return getData().getInt(getCellOffset(cellNumber));
 		} else {
@@ -166,6 +187,13 @@ public class BTreePage {
 		if (getParent() == null)
 			return null;
 		return getParent().getChildPage(getParentCellNumber() + 1);
+	}
+
+	public BTreePage getPrevLeafPage() throws Trouble {
+		assert (isLeafPage());
+		if (getParent() == null)
+			return null;
+		return getParent().getChildPage(getParentCellNumber() - 1);
 	}
 
 }

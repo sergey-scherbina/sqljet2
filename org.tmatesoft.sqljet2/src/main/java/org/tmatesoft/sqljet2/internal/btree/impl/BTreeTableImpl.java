@@ -36,6 +36,18 @@ public class BTreeTableImpl extends BTreeImpl implements BTreeTable {
 	}
 
 	@Override
+	public void end() throws Trouble {
+		cell = null;
+		super.end();
+	}
+
+	@Override
+	public boolean prev() throws Trouble {
+		cell = null;
+		return super.prev();
+	}
+
+	@Override
 	public Pointer getCell() {
 		if (cell == null) {
 			cell = super.getCell();
@@ -73,15 +85,17 @@ public class BTreeTableImpl extends BTreeImpl implements BTreeTable {
 	}
 
 	private void parseCell() {
-		allDataSize = VarInt.varInt.getValue(getCell(), 0);
+		if (cell == null)
+			return;
+		allDataSize = VarInt.varInt.getValue(cell, 0);
 		byte rowIdOffset = VarInt.varInt.getBytesCount(allDataSize);
-		rowId = VarInt.varInt.getValue(getCell(), rowIdOffset);
+		rowId = VarInt.varInt.getValue(cell, rowIdOffset);
 		notOverflowDataOffset = rowIdOffset
 				+ VarInt.varInt.getBytesCount(rowId);
 		notOverflowDataSize = computeNotOverflowDataSize();
 		hasOverflow = allDataSize != notOverflowDataSize;
-		overflowPageNumber = hasOverflow ? getCell().getInt(
-				notOverflowDataOffset + notOverflowDataSize) : 0;
+		overflowPageNumber = hasOverflow ? cell.getInt(notOverflowDataOffset
+				+ notOverflowDataSize) : 0;
 	}
 
 	private int computeNotOverflowDataSize() {
