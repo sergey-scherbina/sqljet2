@@ -63,7 +63,7 @@ public class BTreeImpl implements BTree {
 	}
 
 	public boolean prev() throws Trouble {
-		if (--leafCellNumber <= 0) {
+		if (--leafCellNumber < 0) {
 			leafPage = leafPage.getPrevLeafPage();
 			if (leafPage != null) {
 				leafCellNumber = leafPage.getCellsCount()-1;
