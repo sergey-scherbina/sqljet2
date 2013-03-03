@@ -1,4 +1,4 @@
-package org.tmatesoft.sqljet2.internal.btree.impl;
+package org.tmatesoft.sqljet2.internal.btree;
 
 import org.tmatesoft.sqljet2.internal.pager.Page;
 import org.tmatesoft.sqljet2.internal.system.Pointer;

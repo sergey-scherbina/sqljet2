@@ -1,9 +1,8 @@
 package org.tmatesoft.sqljet2.test;
 
 import org.junit.Test;
+import org.tmatesoft.sqljet2.internal.btree.BTreeRecord;
 import org.tmatesoft.sqljet2.internal.btree.BTreeTable;
-import org.tmatesoft.sqljet2.internal.btree.impl.BTreeRecordImpl;
-import org.tmatesoft.sqljet2.internal.btree.impl.BTreeTableImpl;
 import org.tmatesoft.sqljet2.internal.pager.Pager;
 import org.tmatesoft.sqljet2.internal.pager.impl.HeapPagerCache;
 import org.tmatesoft.sqljet2.internal.pager.impl.FilePager;
@@ -21,10 +20,10 @@ public class TestDb {
 				new DefaultFileSystem());
 		pager.open(TEST_DB, OpenPermission.READONLY);
 		try {
-			final BTreeTable table = new BTreeTableImpl(pager, 1);
+			final BTreeTable table = new BTreeTable(pager, 1);
 			table.begin();
 			do {
-				final BTreeRecordImpl r = new BTreeRecordImpl(
+				final BTreeRecord r = new BTreeRecord(
 						table.getNotOverflowData());
 				for (int i = 0; i < r.getColumnsCount(); i++) {
 					System.out.println(r.getValue(i));
@@ -42,10 +41,10 @@ public class TestDb {
 				new DefaultFileSystem());
 		pager.open(TEST_DB, OpenPermission.READONLY);
 		try {
-			final BTreeTable table = new BTreeTableImpl(pager, 1);
+			final BTreeTable table = new BTreeTable(pager, 1);
 			table.end();
 			do {
-				final BTreeRecordImpl r = new BTreeRecordImpl(
+				final BTreeRecord r = new BTreeRecord(
 						table.getNotOverflowData());
 				for (int i = 0; i < r.getColumnsCount(); i++) {
 					System.out.println(r.getValue(i));
