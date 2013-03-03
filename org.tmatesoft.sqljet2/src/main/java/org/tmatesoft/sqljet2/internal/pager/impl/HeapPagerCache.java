@@ -1,6 +1,7 @@
 package org.tmatesoft.sqljet2.internal.pager.impl;
 
 import java.lang.ref.SoftReference;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.tmatesoft.sqljet2.internal.pager.Page;
@@ -8,15 +9,15 @@ import org.tmatesoft.sqljet2.internal.pager.PagerCache;
 
 public class HeapPagerCache implements PagerCache {
 
-	private final ConcurrentHashMap<Integer, SoftReference<Page>> soft = new ConcurrentHashMap<Integer, SoftReference<Page>>();
+	private final Map<Integer, SoftReference<Page>> heap = new ConcurrentHashMap<Integer, SoftReference<Page>>();
 
 	public Page getPage(final int pageNumber) {
 		final Integer pn = pageNumber;
-		final SoftReference<Page> ref = soft.get(pn);
+		final SoftReference<Page> ref = heap.get(pn);
 		if (ref != null) {
 			final Page page = ref.get();
 			if (page == null) {
-				soft.remove(pn);
+				heap.remove(pn);
 			}
 			return page;
 		}
@@ -24,8 +25,8 @@ public class HeapPagerCache implements PagerCache {
 	}
 
 	public void putPage(final Page page) {
-		if(page!=null) {
-			soft.put(page.getPageNumber(), new SoftReference(page));
+		if (page != null) {
+			heap.put(page.getPageNumber(), new SoftReference<Page>(page));
 		}
 	}
 }
