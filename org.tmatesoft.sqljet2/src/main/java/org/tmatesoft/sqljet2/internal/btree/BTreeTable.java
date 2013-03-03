@@ -19,7 +19,7 @@ public class BTreeTable extends BTree {
 	public BTreeTable(final Pager pager, final int rootPageNumber)
 			throws Trouble {
 		super(pager, rootPageNumber);
-		assert (getRootPage().isTablePage());
+		assert (getRootPage().getHeader().isTablePage());
 	}
 
 	@Override

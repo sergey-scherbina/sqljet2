@@ -44,7 +44,7 @@ public class BTree {
 	public void end() throws Trouble {
 		leafPage = rootPage.getLastLeafPage();
 		if (leafPage != null) {
-			leafCellNumber = leafPage.getCellsCount() - 1;
+			leafCellNumber = leafPage.getHeader().getCellsCount() - 1;
 		}
 	}
 
@@ -53,7 +53,7 @@ public class BTree {
 	}
 
 	public boolean next() throws Trouble {
-		if (++leafCellNumber >= leafPage.getCellsCount()) {
+		if (++leafCellNumber >= leafPage.getHeader().getCellsCount()) {
 			leafPage = leafPage.getNextLeafPage();
 			leafCellNumber = 0;
 		}
@@ -64,7 +64,7 @@ public class BTree {
 		if (--leafCellNumber < 0) {
 			leafPage = leafPage.getPrevLeafPage();
 			if (leafPage != null) {
-				leafCellNumber = leafPage.getCellsCount() - 1;
+				leafCellNumber = leafPage.getHeader().getCellsCount() - 1;
 			} else {
 				leafCellNumber = 0;
 			}
