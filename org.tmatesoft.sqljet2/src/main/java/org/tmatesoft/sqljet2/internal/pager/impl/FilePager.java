@@ -1,27 +1,36 @@
 package org.tmatesoft.sqljet2.internal.pager.impl;
 
-import org.tmatesoft.sqljet2.internal.pager.Pager;
 import org.tmatesoft.sqljet2.internal.pager.Page;
+import org.tmatesoft.sqljet2.internal.pager.Pager;
 import org.tmatesoft.sqljet2.internal.pager.PagerCache;
 import org.tmatesoft.sqljet2.internal.system.FileStream;
 import org.tmatesoft.sqljet2.internal.system.FileSystem;
 import org.tmatesoft.sqljet2.internal.system.FileSystem.OpenPermission;
-import org.tmatesoft.sqljet2.internal.system.Memory;
 import org.tmatesoft.sqljet2.internal.system.MemoryBlock;
 import org.tmatesoft.sqljet2.internal.system.Trouble;
 import org.tmatesoft.sqljet2.internal.system.impl.ArrayMemory;
+import org.tmatesoft.sqljet2.internal.system.impl.DefaultFileSystem;
 
 public class FilePager implements Pager {
 
 	private final PagerCache cache;
 	private final FileSystem fs;
 
-	private String fileName;
-	private OpenPermission permission;
-
 	private FileStream stream;
 
 	private int pageSize = DEFAULT_PAGESIZE;
+
+	public FilePager() {
+		this(new HeapPagerCache(), new DefaultFileSystem());
+	}
+
+	public FilePager(final FileSystem fs) {
+		this(new HeapPagerCache(), fs);
+	}
+
+	public FilePager(final PagerCache cache) {
+		this(cache, new DefaultFileSystem());
+	}
 
 	public FilePager(final PagerCache cache, final FileSystem fs) {
 		this.cache = cache;
@@ -36,9 +45,8 @@ public class FilePager implements Pager {
 		return fs;
 	}
 
-	public void open(String fileName, OpenPermission permission) throws Trouble {
-		this.fileName = fileName;
-		this.permission = permission;
+	public void open(final String fileName, final OpenPermission permission)
+			throws Trouble {
 		this.stream = fs.open(fileName, permission);
 	}
 
@@ -46,8 +54,6 @@ public class FilePager implements Pager {
 		if (stream != null) {
 			stream.close();
 			stream = null;
-			fileName = null;
-			permission = null;
 		}
 	}
 
