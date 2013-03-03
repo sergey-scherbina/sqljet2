@@ -4,7 +4,7 @@ import org.tmatesoft.sqljet2.internal.pager.Page;
 import org.tmatesoft.sqljet2.internal.pager.Pager;
 import org.tmatesoft.sqljet2.internal.system.MemoryBlock;
 
-public class PageImpl implements Page {
+public class MemoryPage implements Page {
 
 	private final Pager pager;
 
@@ -12,7 +12,7 @@ public class PageImpl implements Page {
 
 	private final MemoryBlock data;
 
-	public PageImpl(final Pager pager, final int pageNumber,
+	public MemoryPage(final Pager pager, final int pageNumber,
 			final MemoryBlock data) {
 		this.pager = pager;
 		this.pageNumber = pageNumber;

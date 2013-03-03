@@ -6,7 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.tmatesoft.sqljet2.internal.pager.Page;
 import org.tmatesoft.sqljet2.internal.pager.PagerCache;
 
-public class PagerCacheImpl implements PagerCache {
+public class HeapPagerCache implements PagerCache {
 
 	private final ConcurrentHashMap<Integer, SoftReference<Page>> soft = new ConcurrentHashMap<Integer, SoftReference<Page>>();
 

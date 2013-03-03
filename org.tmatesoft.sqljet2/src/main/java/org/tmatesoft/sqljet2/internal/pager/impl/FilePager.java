@@ -11,7 +11,7 @@ import org.tmatesoft.sqljet2.internal.system.MemoryBlock;
 import org.tmatesoft.sqljet2.internal.system.Trouble;
 import org.tmatesoft.sqljet2.internal.system.impl.ArrayMemory;
 
-public class PagerImpl implements Pager {
+public class FilePager implements Pager {
 
 	private final PagerCache cache;
 	private final FileSystem fs;
@@ -23,7 +23,7 @@ public class PagerImpl implements Pager {
 
 	private int pageSize = DEFAULT_PAGESIZE;
 
-	public PagerImpl(final PagerCache cache, final FileSystem fs) {
+	public FilePager(final PagerCache cache, final FileSystem fs) {
 		this.cache = cache;
 		this.fs = fs;
 	}
@@ -91,7 +91,7 @@ public class PagerImpl implements Pager {
 		}
 		{
 			final MemoryBlock data = read(pageSize * (pageNumber - 1), pageSize);
-			final Page page = new PageImpl(this, pageNumber, data);
+			final Page page = new MemoryPage(this, pageNumber, data);
 			cache.putPage(page);
 			return page;
 		}
