@@ -4,11 +4,9 @@ import org.junit.Test;
 import org.tmatesoft.sqljet2.internal.btree.BTreeRecord;
 import org.tmatesoft.sqljet2.internal.btree.BTreeTable;
 import org.tmatesoft.sqljet2.internal.pager.Pager;
-import org.tmatesoft.sqljet2.internal.pager.impl.HeapPagerCache;
 import org.tmatesoft.sqljet2.internal.pager.impl.FilePager;
 import org.tmatesoft.sqljet2.internal.system.FileSystem.OpenPermission;
 import org.tmatesoft.sqljet2.internal.system.Trouble;
-import org.tmatesoft.sqljet2.internal.system.impl.DefaultFileSystem;
 
 public class TestDb {
 
@@ -16,8 +14,7 @@ public class TestDb {
 
 	@Test
 	public void testForward() throws Trouble {
-		final Pager pager = new FilePager(new HeapPagerCache(),
-				new DefaultFileSystem());
+		final Pager pager = new FilePager();
 		pager.open(TEST_DB, OpenPermission.READONLY);
 		try {
 			final BTreeTable table = new BTreeTable(pager, 1);
@@ -37,8 +34,7 @@ public class TestDb {
 
 	@Test
 	public void testBackward() throws Trouble {
-		final Pager pager = new FilePager(new HeapPagerCache(),
-				new DefaultFileSystem());
+		final Pager pager = new FilePager();
 		pager.open(TEST_DB, OpenPermission.READONLY);
 		try {
 			final BTreeTable table = new BTreeTable(pager, 1);
