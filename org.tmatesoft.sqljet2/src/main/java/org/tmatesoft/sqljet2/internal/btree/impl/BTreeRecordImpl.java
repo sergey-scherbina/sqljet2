@@ -1,7 +1,5 @@
 package org.tmatesoft.sqljet2.internal.btree.impl;
 
-import java.io.UnsupportedEncodingException;
-
 import org.tmatesoft.sqljet2.internal.btree.BTreeRecord;
 import org.tmatesoft.sqljet2.internal.system.Pointer;
 import org.tmatesoft.sqljet2.internal.system.Trouble;
@@ -33,9 +31,9 @@ public class BTreeRecordImpl implements BTreeRecord {
 			columnsOffsets = new int[0];
 			values = new Object[0];
 		} else {
-			headerSize = (int) VarInt.varInt.getValue(pointer, 0);
+			headerSize = (int) VarInt.getValue(pointer, 0);
 			columnsTypes = parseColumns(pointer, headerSize,
-					VarInt.varInt.getBytesCount(headerSize), 0);
+					VarInt.getBytesCount(headerSize), 0);
 			columnsCount = columnsTypes.length;
 			columnsOffsets = new int[columnsCount];
 			values = new Object[columnsCount];
@@ -50,9 +48,9 @@ public class BTreeRecordImpl implements BTreeRecord {
 	private static int[] parseColumns(final Pointer pointer,
 			final long headerSize, final int offset, final int column) {
 		if (offset < headerSize) {
-			final long columnType = VarInt.varInt.getValue(pointer, offset);
+			final long columnType = VarInt.getValue(pointer, offset);
 			final int[] columns = parseColumns(pointer, headerSize, offset
-					+ VarInt.varInt.getBytesCount(columnType), column + 1);
+					+ VarInt.getBytesCount(columnType), column + 1);
 			columns[column] = (int) columnType;
 			return columns;
 		} else {

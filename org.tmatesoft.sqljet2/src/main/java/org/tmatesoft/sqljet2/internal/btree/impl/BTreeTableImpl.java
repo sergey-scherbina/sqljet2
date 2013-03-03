@@ -87,11 +87,10 @@ public class BTreeTableImpl extends BTreeImpl implements BTreeTable {
 	private void parseCell() {
 		if (cell == null)
 			return;
-		allDataSize = VarInt.varInt.getValue(cell, 0);
-		byte rowIdOffset = VarInt.varInt.getBytesCount(allDataSize);
-		rowId = VarInt.varInt.getValue(cell, rowIdOffset);
-		notOverflowDataOffset = rowIdOffset
-				+ VarInt.varInt.getBytesCount(rowId);
+		allDataSize = VarInt.getValue(cell, 0);
+		byte rowIdOffset = VarInt.getBytesCount(allDataSize);
+		rowId = VarInt.getValue(cell, rowIdOffset);
+		notOverflowDataOffset = rowIdOffset + VarInt.getBytesCount(rowId);
 		notOverflowDataSize = computeNotOverflowDataSize();
 		hasOverflow = allDataSize != notOverflowDataSize;
 		overflowPageNumber = hasOverflow ? cell.getInt(notOverflowDataOffset
