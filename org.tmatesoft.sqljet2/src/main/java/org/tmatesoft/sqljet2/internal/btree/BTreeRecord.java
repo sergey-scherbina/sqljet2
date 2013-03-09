@@ -31,7 +31,34 @@ public class BTreeRecord {
 			values = new Object[0];
 		} else {
 			headerSize = (int) VarInt.getValue(pointer, 0);
-			columnsTypes = parseColumns(pointer, headerSize,
+			columnsTypes = new int[headerSize];
+			columnsCount = 0;
+			int offset = 1;
+			while (offset < headerSize) {
+				final int columnType = (int) VarInt.getValue(pointer, offset);
+				columnsTypes[columnsCount] = columnType;
+				offset += VarInt.getBytesCount(columnType);
+				columnsCount++;
+			}
+			columnsOffsets = new int[columnsCount];
+			values = new Object[columnsCount];
+			offset = headerSize;
+			for (int i = 0; i < columnsCount; i++) {
+				columnsOffsets[i] = offset;
+				offset += getTypeSize(columnsTypes[i]);
+			}
+		}
+	}
+
+	private void parseRecursive() throws Trouble {
+		if (pointer == null) {
+			headerSize = 0;
+			columnsTypes = new int[0];
+			columnsOffsets = new int[0];
+			values = new Object[0];
+		} else {
+			headerSize = (int) VarInt.getValue(pointer, 0);
+			columnsTypes = parseColumnsRecursive(pointer, headerSize,
 					VarInt.getBytesCount(headerSize), 0);
 			columnsCount = columnsTypes.length;
 			columnsOffsets = new int[columnsCount];
@@ -44,12 +71,12 @@ public class BTreeRecord {
 		}
 	}
 
-	private static int[] parseColumns(final Pointer pointer,
+	private static int[] parseColumnsRecursive(final Pointer pointer,
 			final long headerSize, final int offset, final int column) {
 		if (offset < headerSize) {
 			final long columnType = VarInt.getValue(pointer, offset);
-			final int[] columns = parseColumns(pointer, headerSize, offset
-					+ VarInt.getBytesCount(columnType), column + 1);
+			final int[] columns = parseColumnsRecursive(pointer, headerSize,
+					offset + VarInt.getBytesCount(columnType), column + 1);
 			columns[column] = (int) columnType;
 			return columns;
 		} else {
@@ -58,7 +85,7 @@ public class BTreeRecord {
 	}
 
 	public int getColumnsCount() {
-		return columnsTypes.length;
+		return columnsCount;
 	}
 
 	public int getType(final int column) throws Trouble {
