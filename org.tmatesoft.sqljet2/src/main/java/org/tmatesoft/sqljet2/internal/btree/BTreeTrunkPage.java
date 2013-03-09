@@ -2,6 +2,7 @@ package org.tmatesoft.sqljet2.internal.btree;
 
 import org.tmatesoft.sqljet2.internal.pager.Page;
 import org.tmatesoft.sqljet2.internal.system.Trouble;
+import static org.tmatesoft.sqljet2.internal.btree.BTreePageHeader.*;
 
 public class BTreeTrunkPage extends BTreePage {
 
@@ -17,10 +18,10 @@ public class BTreeTrunkPage extends BTreePage {
 		if (cellNumber <= 0) {
 			return 0;
 		}
-		if (cellNumber < header.getCellsCount()) {
+		if (cellNumber < getCellsCount(page)) {
 			return getData().getInt(getCellOffset(cellNumber));
 		} else {
-			return header.getRightMostChildPageNumber();
+			return getRightMostChildPageNumber(page);
 		}
 	}
 
@@ -34,7 +35,7 @@ public class BTreeTrunkPage extends BTreePage {
 	}
 
 	public BTreeLeafPage getLastLeafPage() throws Trouble {
-		return getChildPage(header.getCellsCount()).getLastLeafPage();
+		return getChildPage(getCellsCount(page)).getLastLeafPage();
 	}
 
 }

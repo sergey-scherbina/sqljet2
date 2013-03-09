@@ -4,6 +4,7 @@ import org.tmatesoft.sqljet2.internal.pager.Pager;
 import org.tmatesoft.sqljet2.internal.system.Pointer;
 import org.tmatesoft.sqljet2.internal.system.Trouble;
 import org.tmatesoft.sqljet2.internal.system.VarInt;
+import static org.tmatesoft.sqljet2.internal.btree.BTreePageHeader.*;
 
 public class BTreeTable extends BTree {
 
@@ -19,7 +20,7 @@ public class BTreeTable extends BTree {
 	public BTreeTable(final Pager pager, final int rootPageNumber)
 			throws Trouble {
 		super(pager, rootPageNumber);
-		assert (getRootPage().getHeader().isTablePage());
+		assert (isTablePage(getRootPage().getPage()));
 	}
 
 	@Override

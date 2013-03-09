@@ -1,7 +1,10 @@
 package org.tmatesoft.sqljet2.internal.btree;
 
+import static org.tmatesoft.sqljet2.internal.btree.BTreePageHeader.getHeaderOffset;
+import static org.tmatesoft.sqljet2.internal.btree.BTreePageHeader.getHeaderSize;
+
 import org.tmatesoft.sqljet2.internal.pager.Page;
-import org.tmatesoft.sqljet2.internal.system.Pointer;
+import org.tmatesoft.sqljet2.internal.system.Memory;
 import org.tmatesoft.sqljet2.internal.system.Trouble;
 import org.tmatesoft.sqljet2.internal.system.Trouble.Code;
 
@@ -38,78 +41,75 @@ public class BTreePageHeader {
 	public static final int HEADER_OFFSET_FRAGMENTEDBYTESCOUNT = 7;
 	public static final int HEADER_OFFSET_RIGHTMOST = 8;
 
-	private final Page page;
-	private final Pointer data;
-
-	public BTreePageHeader(final Page page) {
-		this.page = page;
-		this.data = page.getData().getBegin();
+	private BTreePageHeader() {
 	}
 
-	public Page getPage() {
-		return page;
+	private static Memory getData(final Page page) {
+		return page.getData();
 	}
 
-	public Pointer getData() {
-		return data;
-	}
-
-	public final int getHeaderOffset() {
+	public static final int getHeaderOffset(final Page page) {
 		return page.getPageNumber() == ROOT_PAGENUMBER ? ROOT_HEADER : 0;
 	}
 
-	public byte getPageType() {
-		return getData().getByte(getHeaderOffset() + HEADER_OFFSET_PAGETYPE);
+	public static byte getPageType(final Page page) {
+		return getData(page).getByte(
+				getHeaderOffset(page) + HEADER_OFFSET_PAGETYPE);
 	}
 
-	public int getFirstFreeBlockOffset() {
-		return getData().getUnsignedShort(
-				getHeaderOffset() + HEADER_OFFSET_FIRSTFREEBLOCKOFFSET);
+	public static int getFirstFreeBlockOffset(final Page page) {
+		return getData(page).getUnsignedShort(
+				getHeaderOffset(page) + HEADER_OFFSET_FIRSTFREEBLOCKOFFSET);
 	}
 
-	public int getCellsCount() {
-		return getData().getUnsignedShort(
-				getHeaderOffset() + HEADER_OFFSET_CELLSCOUNT);
+	public static int getCellsCount(final Page page) {
+		return getData(page).getUnsignedShort(
+				getHeaderOffset(page) + HEADER_OFFSET_CELLSCOUNT);
 	}
 
-	public int getCellsAreaOffset() {
-		return getData().getUnsignedShort(
-				getHeaderOffset() + HEADER_OFFSET_CELLSAREAOFFSET);
+	public static int getCellsAreaOffset(final Page page) {
+		return getData(page).getUnsignedShort(
+				getHeaderOffset(page) + HEADER_OFFSET_CELLSAREAOFFSET);
 	}
 
-	public short getFragmentedBytesCount() {
-		return getData().getUnsignedByte(
-				getHeaderOffset() + HEADER_OFFSET_FRAGMENTEDBYTESCOUNT);
+	public static short getFragmentedBytesCount(final Page page) {
+		return getData(page).getUnsignedByte(
+				getHeaderOffset(page) + HEADER_OFFSET_FRAGMENTEDBYTESCOUNT);
 	}
 
-	public int getRightMostChildPageNumber() throws Trouble {
-		if (isTrunkPage()) {
-			return getData()
-					.getInt(getHeaderOffset() + HEADER_OFFSET_RIGHTMOST);
+	public static int getRightMostChildPageNumber(final Page page)
+			throws Trouble {
+		if (isTrunkPage(page)) {
+			return getData(page).getInt(
+					getHeaderOffset(page) + HEADER_OFFSET_RIGHTMOST);
 		}
 		throw new Trouble(Code.ERROR);
 	}
 
-	public boolean isTrunkPage() {
-		final byte t = getPageType();
+	public static boolean isTrunkPage(final Page page) {
+		final byte t = getPageType(page);
 		return t == TRUNK_INDEX || t == TRUNK_TABLE;
 	}
 
-	public boolean isLeafPage() {
-		return !isTrunkPage();
+	public static boolean isLeafPage(final Page page) {
+		return !isTrunkPage(page);
 	}
 
-	public boolean isTablePage() {
-		final byte t = getPageType();
+	public static boolean isTablePage(final Page page) {
+		final byte t = getPageType(page);
 		return t == TRUNK_TABLE || t == TRUNK_TABLE;
 	}
 
-	public boolean isIndexPage() {
-		return !isTablePage();
+	public static boolean isIndexPage(final Page page) {
+		return !isTablePage(page);
 	}
 
-	public int getHeaderSize() {
-		return isTrunkPage() ? HEADER_SIZE_TRUNKPAGE : HEADER_SIZE_LEAFPAGE;
+	public static int getHeaderSize(final Page page) {
+		return isTrunkPage(page) ? HEADER_SIZE_TRUNKPAGE : HEADER_SIZE_LEAFPAGE;
+	}
+
+	public static int getCellsOffset(final Page page) {
+		return getHeaderOffset(page) + getHeaderSize(page);
 	}
 
 }

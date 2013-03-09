@@ -4,6 +4,7 @@ import org.tmatesoft.sqljet2.internal.pager.Page;
 import org.tmatesoft.sqljet2.internal.pager.Pager;
 import org.tmatesoft.sqljet2.internal.system.Pointer;
 import org.tmatesoft.sqljet2.internal.system.Trouble;
+import static org.tmatesoft.sqljet2.internal.btree.BTreePageHeader.*;
 
 abstract public class BTreePage {
 
@@ -16,8 +17,7 @@ abstract public class BTreePage {
 			final int pageNumber, final BTreeTrunkPage parent,
 			final int parentCellNumber) throws Trouble {
 		final Page page = pager.readPage(pageNumber);
-		final BTreePageHeader header = new BTreePageHeader(page);
-		if (header.isTrunkPage()) {
+		if (isTrunkPage(page)) {
 			return new BTreeTrunkPage(page, parent, parentCellNumber);
 		} else {
 			return new BTreeLeafPage(page, parent, parentCellNumber);
@@ -30,8 +30,6 @@ abstract public class BTreePage {
 	protected final Page page;
 	protected final Pointer data;
 
-	protected final BTreePageHeader header;
-
 	public BTreePage(final Page page) {
 		this(page, null, 0);
 	}
@@ -42,7 +40,6 @@ abstract public class BTreePage {
 		this.parentCellNumber = parentCellNumber;
 		this.page = page;
 		this.data = page.getData().getBegin();
-		this.header = new BTreePageHeader(page);
 	}
 
 	public BTreeTrunkPage getParent() {
@@ -61,14 +58,9 @@ abstract public class BTreePage {
 		return data;
 	}
 
-	public BTreePageHeader getHeader() {
-		return header;
-	}
-
 	public int getCellOffset(int cellNumber) {
-		return getData().getUnsignedShort(
-				header.getHeaderOffset() + header.getHeaderSize() + cellNumber
-						* 2);
+		final int offset = getCellsOffset(page) + cellNumber * 2;
+		return getData().getUnsignedShort(offset);
 	}
 
 	public Pointer getCell(int cellNumber) {

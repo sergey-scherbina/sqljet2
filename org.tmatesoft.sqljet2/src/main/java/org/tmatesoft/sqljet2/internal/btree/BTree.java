@@ -3,6 +3,7 @@ package org.tmatesoft.sqljet2.internal.btree;
 import org.tmatesoft.sqljet2.internal.pager.Pager;
 import org.tmatesoft.sqljet2.internal.system.Pointer;
 import org.tmatesoft.sqljet2.internal.system.Trouble;
+import static org.tmatesoft.sqljet2.internal.btree.BTreePageHeader.*;
 
 public class BTree {
 
@@ -44,7 +45,7 @@ public class BTree {
 	public void end() throws Trouble {
 		leafPage = rootPage.getLastLeafPage();
 		if (leafPage != null) {
-			leafCellNumber = leafPage.getHeader().getCellsCount() - 1;
+			leafCellNumber = getCellsCount(leafPage.getPage()) - 1;
 		}
 	}
 
@@ -53,7 +54,7 @@ public class BTree {
 	}
 
 	public boolean next() throws Trouble {
-		if (++leafCellNumber >= leafPage.getHeader().getCellsCount()) {
+		if (++leafCellNumber >= getCellsCount(leafPage.getPage())) {
 			leafPage = leafPage.getNextLeafPage();
 			leafCellNumber = 0;
 		}
@@ -64,7 +65,7 @@ public class BTree {
 		if (--leafCellNumber < 0) {
 			leafPage = leafPage.getPrevLeafPage();
 			if (leafPage != null) {
-				leafCellNumber = leafPage.getHeader().getCellsCount() - 1;
+				leafCellNumber = getCellsCount(leafPage.getPage()) - 1;
 			} else {
 				leafCellNumber = 0;
 			}
