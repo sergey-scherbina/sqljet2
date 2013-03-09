@@ -1,24 +1,42 @@
 package org.tmatesoft.sqljet2.internal.btree;
 
 import org.tmatesoft.sqljet2.internal.pager.Page;
+import org.tmatesoft.sqljet2.internal.pager.Pager;
 import org.tmatesoft.sqljet2.internal.system.Pointer;
 import org.tmatesoft.sqljet2.internal.system.Trouble;
 
-public class BTreePage {
+abstract public class BTreePage {
 
-	private final BTreePage parent;
-	private final int parentCellNumber;
+	public static final BTreePage getBTreePage(final Pager pager,
+			final int pageNumber) throws Trouble {
+		return getBTreePage(pager, pageNumber, null, 0);
+	}
 
-	private final Page page;
-	private final Pointer data;
+	public static final BTreePage getBTreePage(final Pager pager,
+			final int pageNumber, final BTreeTrunkPage parent,
+			final int parentCellNumber) throws Trouble {
+		final Page page = pager.readPage(pageNumber);
+		final BTreePageHeader header = new BTreePageHeader(page);
+		if (header.isTrunkPage()) {
+			return new BTreeTrunkPage(page, parent, parentCellNumber);
+		} else {
+			return new BTreeLeafPage(page, parent, parentCellNumber);
+		}
+	}
 
-	private final BTreePageHeader header;
+	protected final BTreeTrunkPage parent;
+	protected final int parentCellNumber;
+
+	protected final Page page;
+	protected final Pointer data;
+
+	protected final BTreePageHeader header;
 
 	public BTreePage(final Page page) {
 		this(page, null, 0);
 	}
 
-	public BTreePage(final Page page, final BTreePage parent,
+	public BTreePage(final Page page, final BTreeTrunkPage parent,
 			final int parentCellNumber) {
 		this.parent = parent;
 		this.parentCellNumber = parentCellNumber;
@@ -27,7 +45,7 @@ public class BTreePage {
 		this.header = new BTreePageHeader(page);
 	}
 
-	public BTreePage getParent() {
+	public BTreeTrunkPage getParent() {
 		return parent;
 	}
 
@@ -42,7 +60,7 @@ public class BTreePage {
 	public Pointer getData() {
 		return data;
 	}
-	
+
 	public BTreePageHeader getHeader() {
 		return header;
 	}
@@ -57,61 +75,8 @@ public class BTreePage {
 		return getData().getPointer(getCellOffset(cellNumber));
 	}
 
-	public BTreePage getFirstLeafPage() throws Trouble {
-		if (header.isLeafPage()) {
-			if (getParent() == null) {
-				return this;
-			} else {
-				return getParent().getFirstLeafPage();
-			}
-		} else {
-			return getChildPage(0).getFirstLeafPage();
-		}
-	}
+	abstract public BTreeLeafPage getFirstLeafPage() throws Trouble;
 
-	public BTreePage getLastLeafPage() throws Trouble {
-		if (header.isLeafPage()) {
-			if (getParent() == null) {
-				return this;
-			} else {
-				return getParent().getLastLeafPage();
-			}
-		} else {
-			return getChildPage(header.getCellsCount()).getLastLeafPage();
-		}
-	}
-
-	public int getChildPageNumber(final int cellNumber) throws Trouble {
-		assert (header.isTrunkPage());
-		if (cellNumber <= 0) {
-			return 0;
-		}
-		if (cellNumber < header.getCellsCount()) {
-			return getData().getInt(getCellOffset(cellNumber));
-		} else {
-			return header.getRightMostChildPageNumber();
-		}
-	}
-
-	public BTreePage getChildPage(final int cellNumber) throws Trouble {
-		assert (header.isTrunkPage());
-		final int childPageNumber = getChildPageNumber(cellNumber);
-		final Page childPage = getPage().getPager().readPage(childPageNumber);
-		return new BTreePage(childPage, this, cellNumber);
-	}
-
-	public BTreePage getNextLeafPage() throws Trouble {
-		assert (header.isLeafPage());
-		if (getParent() == null)
-			return null;
-		return getParent().getChildPage(getParentCellNumber() + 1);
-	}
-
-	public BTreePage getPrevLeafPage() throws Trouble {
-		assert (header.isLeafPage());
-		if (getParent() == null)
-			return null;
-		return getParent().getChildPage(getParentCellNumber() - 1);
-	}
+	abstract public BTreeLeafPage getLastLeafPage() throws Trouble;
 
 }

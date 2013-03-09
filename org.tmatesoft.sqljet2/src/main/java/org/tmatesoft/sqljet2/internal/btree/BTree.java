@@ -12,14 +12,14 @@ public class BTree {
 
 	private final BTreePage rootPage;
 
-	private BTreePage leafPage = null;
+	private BTreeLeafPage leafPage = null;
 
 	private int leafCellNumber = 0;
 
 	public BTree(final Pager pager, final int rootPageNumber) throws Trouble {
 		this.pager = pager;
 		this.rootPageNumber = rootPageNumber;
-		this.rootPage = new BTreePage(pager.readPage(rootPageNumber));
+		this.rootPage = BTreePage.getBTreePage(pager, rootPageNumber);
 		leafCellNumber = 0;
 		leafPage = rootPage.getFirstLeafPage();
 	}
