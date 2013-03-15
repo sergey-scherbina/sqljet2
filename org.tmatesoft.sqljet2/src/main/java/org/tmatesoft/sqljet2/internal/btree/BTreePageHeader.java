@@ -1,11 +1,13 @@
 package org.tmatesoft.sqljet2.internal.btree;
 
-import static org.tmatesoft.sqljet2.internal.btree.BTreePageHeader.getHeaderOffset;
-import static org.tmatesoft.sqljet2.internal.btree.BTreePageHeader.getHeaderSize;
-
 import org.tmatesoft.sqljet2.internal.pager.Page;
 import org.tmatesoft.sqljet2.internal.system.Memory;
+import org.tmatesoft.sqljet2.internal.system.StructDef;
 import org.tmatesoft.sqljet2.internal.system.Trouble;
+import org.tmatesoft.sqljet2.internal.system.StructDef.SignedByte;
+import org.tmatesoft.sqljet2.internal.system.StructDef.SignedInt;
+import org.tmatesoft.sqljet2.internal.system.StructDef.UnsignedByte;
+import org.tmatesoft.sqljet2.internal.system.StructDef.UnsignedShort;
 import org.tmatesoft.sqljet2.internal.system.Trouble.Code;
 
 /**
@@ -23,23 +25,34 @@ import org.tmatesoft.sqljet2.internal.system.Trouble.Code;
 
 public class BTreePageHeader {
 
-	public static final int ROOT_PAGENUMBER = 1;
-	public static final int ROOT_HEADER = 100;
+	public interface Def {
 
-	public static final byte TRUNK_INDEX = 2;
-	public static final byte TRUNK_TABLE = 5;
-	public static final byte LEAF_INDEX = 10;
-	public static final byte LEAF_TABLE = 13;
+		int ROOT_PAGENUMBER = 1;
+		int ROOT_HEADER = 100;
 
-	public static final int HEADER_SIZE_LEAFPAGE = 8;
-	public static final int HEADER_SIZE_TRUNKPAGE = 12;
+		byte TRUNK_INDEX = 2;
+		byte TRUNK_TABLE = 5;
+		byte LEAF_INDEX = 10;
+		byte LEAF_TABLE = 13;
 
-	public static final int HEADER_OFFSET_PAGETYPE = 0;
-	public static final int HEADER_OFFSET_FIRSTFREEBLOCKOFFSET = 1;
-	public static final int HEADER_OFFSET_CELLSCOUNT = 3;
-	public static final int HEADER_OFFSET_CELLSAREAOFFSET = 5;
-	public static final int HEADER_OFFSET_FRAGMENTEDBYTESCOUNT = 7;
-	public static final int HEADER_OFFSET_RIGHTMOST = 8;
+		int HEADER_SIZE_LEAFPAGE = 8;
+		int HEADER_SIZE_TRUNKPAGE = 12;
+
+		StructDef def = new StructDef();
+
+		SignedByte pageType = def.signedByte();
+
+		UnsignedShort firstFreeBlockOffset = def.unsignedShort();
+
+		UnsignedShort cellsCount = def.unsignedShort();
+
+		UnsignedShort cellsAreaOffset = def.unsignedShort();
+
+		UnsignedByte fragmentedBytesCount = def.unsignedByte();
+
+		SignedInt rightMostChildPageNumber = def.signedInt();
+
+	}
 
 	private BTreePageHeader() {
 	}
@@ -48,47 +61,47 @@ public class BTreePageHeader {
 		return page.getData();
 	}
 
+	public static boolean isRootPage(final Page page) {
+		return page.getPageNumber() == Def.ROOT_PAGENUMBER;
+	}
+
 	public static final int getHeaderOffset(final Page page) {
-		return page.getPageNumber() == ROOT_PAGENUMBER ? ROOT_HEADER : 0;
+		return isRootPage(page) ? Def.ROOT_HEADER : 0;
 	}
 
 	public static byte getPageType(final Page page) {
-		return getData(page).getByte(
-				getHeaderOffset(page) + HEADER_OFFSET_PAGETYPE);
+		return Def.pageType.get(getData(page), getHeaderOffset(page));
 	}
 
 	public static int getFirstFreeBlockOffset(final Page page) {
-		return getData(page).getUnsignedShort(
-				getHeaderOffset(page) + HEADER_OFFSET_FIRSTFREEBLOCKOFFSET);
+		return Def.firstFreeBlockOffset.get(getData(page),
+				getHeaderOffset(page));
 	}
 
 	public static int getCellsCount(final Page page) {
-		return getData(page).getUnsignedShort(
-				getHeaderOffset(page) + HEADER_OFFSET_CELLSCOUNT);
+		return Def.cellsCount.get(getData(page), getHeaderOffset(page));
 	}
 
 	public static int getCellsAreaOffset(final Page page) {
-		return getData(page).getUnsignedShort(
-				getHeaderOffset(page) + HEADER_OFFSET_CELLSAREAOFFSET);
+		return Def.cellsAreaOffset.get(getData(page), getHeaderOffset(page));
 	}
 
 	public static short getFragmentedBytesCount(final Page page) {
-		return getData(page).getUnsignedByte(
-				getHeaderOffset(page) + HEADER_OFFSET_FRAGMENTEDBYTESCOUNT);
+		return Def.fragmentedBytesCount.get(getData(page),
+				getHeaderOffset(page));
 	}
 
 	public static int getRightMostChildPageNumber(final Page page)
 			throws Trouble {
-		if (isTrunkPage(page)) {
-			return getData(page).getInt(
-					getHeaderOffset(page) + HEADER_OFFSET_RIGHTMOST);
-		}
-		throw new Trouble(Code.ERROR);
+		if (!isTrunkPage(page))
+			throw new Trouble(Code.ERROR);
+		return Def.rightMostChildPageNumber.get(getData(page),
+				getHeaderOffset(page));
 	}
 
 	public static boolean isTrunkPage(final Page page) {
 		final byte t = getPageType(page);
-		return t == TRUNK_INDEX || t == TRUNK_TABLE;
+		return t == Def.TRUNK_INDEX || t == Def.TRUNK_TABLE;
 	}
 
 	public static boolean isLeafPage(final Page page) {
@@ -97,7 +110,7 @@ public class BTreePageHeader {
 
 	public static boolean isTablePage(final Page page) {
 		final byte t = getPageType(page);
-		return t == TRUNK_TABLE || t == TRUNK_TABLE;
+		return t == Def.TRUNK_TABLE || t == Def.TRUNK_TABLE;
 	}
 
 	public static boolean isIndexPage(final Page page) {
@@ -105,7 +118,8 @@ public class BTreePageHeader {
 	}
 
 	public static int getHeaderSize(final Page page) {
-		return isTrunkPage(page) ? HEADER_SIZE_TRUNKPAGE : HEADER_SIZE_LEAFPAGE;
+		return isTrunkPage(page) ? Def.HEADER_SIZE_TRUNKPAGE
+				: Def.HEADER_SIZE_LEAFPAGE;
 	}
 
 	public static int getCellsOffset(final Page page) {

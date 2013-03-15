@@ -1,9 +1,18 @@
 package org.tmatesoft.sqljet2.internal.btree;
 
+import org.tmatesoft.sqljet2.internal.btree.BTreePageHeader.Def;
 import org.tmatesoft.sqljet2.internal.pager.Page;
 import org.tmatesoft.sqljet2.internal.pager.Pager;
+import org.tmatesoft.sqljet2.internal.system.Memory;
 import org.tmatesoft.sqljet2.internal.system.Pointer;
+import org.tmatesoft.sqljet2.internal.system.StructDef;
 import org.tmatesoft.sqljet2.internal.system.Trouble;
+import org.tmatesoft.sqljet2.internal.system.StructDef.SignedByte;
+import org.tmatesoft.sqljet2.internal.system.StructDef.SignedInt;
+import org.tmatesoft.sqljet2.internal.system.StructDef.UnsignedByte;
+import org.tmatesoft.sqljet2.internal.system.StructDef.UnsignedShort;
+import org.tmatesoft.sqljet2.internal.system.Trouble.Code;
+
 import static org.tmatesoft.sqljet2.internal.btree.BTreePageHeader.*;
 
 abstract public class BTreePage {

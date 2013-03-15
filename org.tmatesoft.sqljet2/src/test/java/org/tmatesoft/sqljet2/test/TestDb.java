@@ -6,9 +6,25 @@ import org.tmatesoft.sqljet2.internal.btree.BTreeTable;
 import org.tmatesoft.sqljet2.internal.pager.Pager;
 import org.tmatesoft.sqljet2.internal.pager.impl.FilePager;
 import org.tmatesoft.sqljet2.internal.system.FileSystem.OpenPermission;
+import org.tmatesoft.sqljet2.internal.system.StructDef;
+import org.tmatesoft.sqljet2.internal.system.StructDef.SignedByte;
 import org.tmatesoft.sqljet2.internal.system.Trouble;
+import static org.junit.Assert.*;
 
 public class TestDb {
+
+	private interface TestStruct {
+		StructDef def = new StructDef();
+
+		SignedByte test0 = def.signedByte();
+		SignedByte test1 = def.signedByte();
+		SignedByte test2 = def.signedByte();
+	}
+
+	@Test
+	public void testStruct() {
+		assertEquals(2, TestStruct.test2.getOffset());
+	}
 
 	private final static String TEST_DB = "src/test/resources/db/testdb.sqlite";
 
