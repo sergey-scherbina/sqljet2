@@ -11,15 +11,16 @@ import org.tmatesoft.sqljet2.internal.system.Trouble.Code;
 
 public class BTreeModel {
 
-	private static Node node(final Page page) {
-		if (BTreePageHeader.isTrunkPage(page)) {
-			return new Trunk(page);
-		} else {
-			return new Leaf(page);
-		}
-	}
+	public static abstract class Node {
 
-	private static abstract class Node {
+		public static Node root(final Page page) {
+			if (BTreePageHeader.isTrunkPage(page)) {
+				return new Trunk(page);
+			} else {
+				return new Leaf(page);
+			}
+		}
+
 		protected final Page page;
 
 		public Node(final Page page) {
@@ -28,20 +29,35 @@ public class BTreeModel {
 
 		public abstract boolean isTrunk();
 
+		public boolean isRoot() {
+			return !isChild();
+		}
+
+		public boolean isChild() {
+			return false;
+		}
+
 		public boolean isLeaf() {
 			return !isTrunk();
 		}
 
-		public Trunk asTrunk() {
+		public Trunk asTrunk() throws Trouble {
 			if (isTrunk() && this instanceof Trunk)
 				return (Trunk) this;
-			return null;
+			throw new Trouble(Code.ERROR);
 		}
 
-		public Leaf asLeaf() {
+		public Leaf asLeaf() throws Trouble {
 			if (isLeaf() && this instanceof Leaf)
 				return (Leaf) this;
-			return null;
+			throw new Trouble(Code.ERROR);
+		}
+
+		public ChildNode asChild() throws Trouble {
+			if (isChild() && this instanceof ChildNode) {
+				return (ChildNode) this;
+			}
+			throw new Trouble(Code.ERROR);
 		}
 
 		protected Memory getData() {
@@ -92,8 +108,13 @@ public class BTreeModel {
 			return getPager().readPage(childPageNumber(number));
 		}
 
-		private Node childNode(final int number) throws Trouble {
-			return node(childPage(number));
+		private ChildNode childNode(final int number) throws Trouble {
+			final Page page = childPage(number);
+			if (BTreePageHeader.isTrunkPage(page)) {
+				return new TrunkChild(page, this, number);
+			} else {
+				return new LeafChild(page, this, number);
+			}
 		}
 
 	}
@@ -102,6 +123,50 @@ public class BTreeModel {
 
 		public Leaf(final Page page) {
 			super(page);
+		}
+
+		@Override
+		public boolean isTrunk() {
+			return false;
+		}
+
+	}
+
+	public static abstract class ChildNode extends Node {
+
+		protected final Trunk parent;
+		protected final int number;
+
+		public ChildNode(final Page page, final Trunk parent, final int number) {
+			super(page);
+			this.parent = parent;
+			this.number = number;
+		}
+
+		@Override
+		public boolean isChild() {
+			return true;
+		}
+
+	}
+
+	public static class TrunkChild extends ChildNode {
+
+		public TrunkChild(Page page, Trunk parent, int number) {
+			super(page, parent, number);
+		}
+
+		@Override
+		public boolean isTrunk() {
+			return true;
+		}
+
+	}
+
+	public static class LeafChild extends ChildNode {
+
+		public LeafChild(Page page, Trunk parent, int number) {
+			super(page, parent, number);
 		}
 
 		@Override
