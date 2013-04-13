@@ -59,6 +59,14 @@ public final class StructDef {
 			super(Memory.SIZE_BYTE);
 		}
 
+		public final byte get(final Memory m) {
+			return get(m, 0);
+		}
+
+		public final void set(final Memory m, final byte value) {
+			set(m, 0, value);
+		}
+
 		public final byte get(final Memory m, final int address) {
 			return m.getByte(address + offset);
 		}
@@ -72,6 +80,14 @@ public final class StructDef {
 	public final class UnsignedByte extends Member {
 		public UnsignedByte() {
 			super(Memory.SIZE_BYTE);
+		}
+
+		public final short get(final Memory m) {
+			return get(m, 0);
+		}
+
+		public final void set(final Memory m, final short value) {
+			set(m, 0, value);
 		}
 
 		public final short get(final Memory m, final int address) {
@@ -89,6 +105,14 @@ public final class StructDef {
 			super(Memory.SIZE_SHORT);
 		}
 
+		public final short get(final Memory m) {
+			return get(m, 0);
+		}
+
+		public final void set(final Memory m, final short value) {
+			set(m, 0, value);
+		}
+
 		public final short get(final Memory m, final int address) {
 			return m.getShort(address + offset);
 		}
@@ -102,6 +126,14 @@ public final class StructDef {
 	public final class UnsignedShort extends Member {
 		public UnsignedShort() {
 			super(Memory.SIZE_SHORT);
+		}
+
+		public final int get(final Memory m) {
+			return get(m, 0);
+		}
+
+		public final void set(final Memory m, final int value) {
+			set(m, 0, value);
 		}
 
 		public final int get(final Memory m, final int address) {
@@ -118,6 +150,14 @@ public final class StructDef {
 			super(Memory.SIZE_INT);
 		}
 
+		public final int get(final Memory m) {
+			return get(m, 0);
+		}
+
+		public final void set(final Memory m, final int value) {
+			set(m, 0, value);
+		}
+
 		public final int get(final Memory m, final int address) {
 			return m.getInt(address + offset);
 		}
@@ -130,6 +170,14 @@ public final class StructDef {
 	public final class UnsignedInt extends Member {
 		public UnsignedInt() {
 			super(Memory.SIZE_INT);
+		}
+
+		public final long get(final Memory m) {
+			return get(m, 0);
+		}
+
+		public final void set(final Memory m, final long value) {
+			set(m, 0, value);
 		}
 
 		public final long get(final Memory m, final int address) {
@@ -151,6 +199,18 @@ public final class StructDef {
 			this.count = count;
 		}
 
+		public final byte[] get(final Memory m) {
+			return get(m, 0);
+		}
+
+		public final void get(final Memory m, byte[] to) {
+			get(m, 0, to);
+		}
+
+		public final void set(final Memory m, final byte[] value) {
+			set(m, 0, value);
+		}
+
 		public final byte[] get(final Memory m, final int address) {
 			final byte[] to = new byte[count];
 			get(m, address, to);
@@ -162,8 +222,8 @@ public final class StructDef {
 		}
 
 		public final void set(final Memory m, final int address,
-				final long value) {
-			m.putUnsignedInt(address + offset, value);
+				final byte[] value) {
+			m.putBytes(address + offset, value);
 		}
 	}
 
