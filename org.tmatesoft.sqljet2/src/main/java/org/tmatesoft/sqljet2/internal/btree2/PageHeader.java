@@ -1,7 +1,10 @@
 package org.tmatesoft.sqljet2.internal.btree2;
 
+import static org.tmatesoft.sqljet2.internal.btree.BTreePageHeader.getCellsOffset;
+
 import org.tmatesoft.sqljet2.internal.pager.Page;
 import org.tmatesoft.sqljet2.internal.system.Memory;
+import org.tmatesoft.sqljet2.internal.system.Pointer;
 import org.tmatesoft.sqljet2.internal.system.StructDef;
 import org.tmatesoft.sqljet2.internal.system.StructDef.SignedByte;
 import org.tmatesoft.sqljet2.internal.system.StructDef.SignedInt;
@@ -112,5 +115,15 @@ public class PageHeader {
 	public static int getCellsOffset(final Page page) {
 		return getHeaderOffset(page) + getHeaderSize(page);
 	}
+	
+	public static int getCellOffset(final Page page, int cellNumber) {
+		final int offset = getCellsOffset(page) + cellNumber * 2;
+		return page.getData().getUnsignedShort(offset);
+	}
+	
+	public static Pointer getCell(final Page page, int cellNumber) {
+		return page.getData().getPointer(getCellOffset(page, cellNumber));
+	}
+
 
 }
