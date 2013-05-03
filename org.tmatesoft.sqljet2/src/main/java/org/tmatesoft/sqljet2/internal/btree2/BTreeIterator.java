@@ -8,7 +8,17 @@ import org.tmatesoft.sqljet2.internal.pager.Page;
 import org.tmatesoft.sqljet2.internal.system.Pointer;
 import org.tmatesoft.sqljet2.internal.system.Trouble;
 
-public class BTreeIterator {
+public class BTreeIterator implements Iterable<BTreeRecord> {
+	
+	protected final Page page;
+	
+	public BTreeIterator(final Page page) {
+		this.page = page;
+	}
+	
+	public Iterator<BTreeRecord> iterator() {
+		return new LeafIterator(page);
+	}
 
 	private static class CellsIterator implements Iterator<Pointer> {
 
@@ -68,7 +78,6 @@ public class BTreeIterator {
 
 		public void remove() {
 		}
-
 	}
-
+	
 }
