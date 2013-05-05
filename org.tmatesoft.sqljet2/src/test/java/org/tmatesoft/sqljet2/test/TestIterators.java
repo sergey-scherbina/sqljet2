@@ -47,8 +47,9 @@ public class TestIterators {
 					System.out.println(page);
 					System.out.println(def);
 					System.out.println();
-
+					int n = 0;
 					for (final BTreeRecord r : new BTreeIterator(pager.readPage(page.intValue()))) {
+						System.out.println(++n);
 						for (int i = 0; i < r.getColumnsCount(); i++) {
 							System.out.println(r.getValue(i));
 						}
