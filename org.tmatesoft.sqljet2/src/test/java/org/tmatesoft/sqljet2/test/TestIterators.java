@@ -14,25 +14,7 @@ public class TestIterators {
 	private final static String TEST_DB = "src/test/resources/db/testdb.sqlite";
 
 	@Test
-	public void testLeafIterator() throws Trouble {
-		final Pager pager = new FilePager();
-		pager.open(TEST_DB, OpenPermission.READONLY);
-		try {
-			final LeafIterator t = new LeafIterator(pager.readPage(1));
-			while (t.hasNext()) {
-				final BTreeRecord r = t.next();
-				for (int i = 0; i < r.getColumnsCount(); i++) {
-					System.out.println(r.getValue(i));
-				}
-				System.out.println();
-			}
-		} finally {
-			pager.close();
-		}
-	}
-
-	@Test
-	public void testBtreeIterator() throws Trouble {
+	public void testSchema() throws Trouble {
 		final Pager pager = new FilePager();
 		pager.open(TEST_DB, OpenPermission.READONLY);
 		try {
@@ -46,5 +28,38 @@ public class TestIterators {
 			pager.close();
 		}
 	}
+	
+	@Test
+	public void testData() throws Trouble {
+		final Pager pager = new FilePager();
+		pager.open(TEST_DB, OpenPermission.READONLY);
+		try {
+			for (final BTreeRecord s : new BTreeIterator(pager.readPage(1))) {
+				final String type = (String) s.getValue(0);
+				final String name = (String) s.getValue(1);
+				final Number page = (Number) s.getValue(3);
+				final String def = (String) s.getValue(4);
+				if("table".equalsIgnoreCase(type)) {
+					System.out.println();
+					System.out.println(type);
+					System.out.println(name);
+					System.out.println(page);
+					System.out.println(def);
+					System.out.println();
+
+					for (final BTreeRecord r : new BTreeIterator(pager.readPage(page.intValue()))) {
+						for (int i = 0; i < r.getColumnsCount(); i++) {
+							System.out.println(r.getValue(i));
+						}
+						System.out.println();
+					}
+
+				}
+			}
+		} finally {
+			pager.close();
+		}
+	}
+
 
 }
