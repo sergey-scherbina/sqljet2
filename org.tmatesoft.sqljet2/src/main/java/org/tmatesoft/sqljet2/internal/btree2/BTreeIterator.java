@@ -93,26 +93,39 @@ public class BTreeIterator implements Iterable<BTreeRecord> {
 		private final CellsIterator cells;
 
 		private Iterator<BTreeRecord> current = null;
+		private Iterator<BTreeRecord> last = null;
 
 		public TrunkIterator(final Page page) {
 			cells = new CellsIterator(page);
 		}
 
 		public boolean hasNext() {
-			return (current!=null && current.hasNext()) || cells.hasNext();
+			return (last != null && last.hasNext())
+					|| (current != null && current.hasNext())
+					|| cells.hasNext() || last == null || last.hasNext();
 		}
 
 		public BTreeRecord next() {
-			if (current == null || !current.hasNext())
-				try {
+			if (last != null) {
+				return last.next();
+			} else if (current != null && current.hasNext()) {
+				return current.next();
+			}
+			try {
+				if (cells.hasNext()) {
 					final Pointer cell = cells.next();
 					final int child = TableTrunkCell.getLeftChild(
 							cell.getMemory(), cell.getAddress());
 					current = newIterator(cells.page.getPager().readPage(child));
-				} catch (Trouble e) {
-					throw new RuntimeException(e);
+					return current.next();
+				} else {
+					last = newIterator(cells.page.getPager().readPage(
+							PageHeader.getRightMostChildPageNumber(cells.page)));
+					return last.next();
 				}
-			return current.next();
+			} catch (Trouble e) {
+				throw new RuntimeException(e);
+			}
 		}
 
 		public void remove() {
