@@ -99,7 +99,7 @@ public class BTreeIterator implements Iterable<BTreeRecord> {
 		}
 
 		public boolean hasNext() {
-			return cells.hasNext();
+			return (current!=null && current.hasNext()) || cells.hasNext();
 		}
 
 		public BTreeRecord next() {

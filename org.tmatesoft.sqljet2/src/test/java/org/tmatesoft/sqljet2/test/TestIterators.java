@@ -12,6 +12,7 @@ import org.tmatesoft.sqljet2.internal.system.Trouble;
 public class TestIterators {
 
 	private final static String TEST_DB = "src/test/resources/db/testdb.sqlite";
+	private final static String TEST_DB2 = "src/test/resources/db/rep-cache.db";
 
 	@Test
 	public void testSchema() throws Trouble {
@@ -32,7 +33,7 @@ public class TestIterators {
 	@Test
 	public void testData() throws Trouble {
 		final Pager pager = new FilePager();
-		pager.open(TEST_DB, OpenPermission.READONLY);
+		pager.open(TEST_DB2, OpenPermission.READONLY);
 		try {
 			for (final BTreeRecord s : new BTreeIterator(pager.readPage(1))) {
 				final String type = (String) s.getValue(0);
@@ -53,13 +54,11 @@ public class TestIterators {
 						}
 						System.out.println();
 					}
-
 				}
 			}
 		} finally {
 			pager.close();
 		}
 	}
-
 
 }
