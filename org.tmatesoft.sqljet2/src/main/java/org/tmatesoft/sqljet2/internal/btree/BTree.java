@@ -27,12 +27,12 @@ public class BTree implements Iterable<BTreeRecord> {
 		return newIterator(page);
 	}
 
-	private static class CellsIterator implements Iterator<Pointer> {
+	private static class Cells {
 
-		private final Page page;
+		protected final Page page;
 		private int index = 0;
 
-		public CellsIterator(final Page page) {
+		public Cells(final Page page) {
 			this.page = page;
 		}
 
@@ -44,37 +44,33 @@ public class BTree implements Iterable<BTreeRecord> {
 			return PageHeader.getCell(page, index);
 		}
 
-		public boolean hasNext() {
+		protected boolean hasNextCell() {
 			return index < getCellsCount();
 		}
 
-		public Pointer next() {
-			if (hasNext()) {
+		protected Pointer nextCell() {
+			if (hasNextCell()) {
 				return getCell(index++);
 			} else {
 				throw new NoSuchElementException();
 			}
 		}
-
-		public void remove() {
-		}
 	}
 
-	private static class LeafIterator implements Iterator<BTreeRecord> {
-
-		private final CellsIterator cells;
+	private static class LeafIterator extends Cells implements
+			Iterator<BTreeRecord> {
 
 		public LeafIterator(final Page page) {
-			cells = new CellsIterator(page);
+			super(page);
 		}
 
 		public boolean hasNext() {
-			return cells.hasNext();
+			return hasNextCell();
 		}
 
 		public BTreeRecord next() {
 			try {
-				final Pointer cell = cells.next();
+				final Pointer cell = nextCell();
 				return new BTreeRecord(cell.getMemory().getPointer(
 						TableLeafCell.getPayloadOffset(cell.getMemory(),
 								cell.getAddress())));
@@ -87,21 +83,24 @@ public class BTree implements Iterable<BTreeRecord> {
 		}
 	}
 
-	private static class TrunkIterator implements Iterator<BTreeRecord> {
-
-		private final CellsIterator cells;
+	private static class TrunkIterator extends Cells implements
+			Iterator<BTreeRecord> {
 
 		private Iterator<BTreeRecord> current = null;
 		private Iterator<BTreeRecord> last = null;
 
 		public TrunkIterator(final Page page) {
-			cells = new CellsIterator(page);
+			super(page);
 		}
 
 		public boolean hasNext() {
 			return (last != null && last.hasNext())
-					|| (current != null && current.hasNext())
-					|| cells.hasNext() || last == null || last.hasNext();
+					|| (current != null && current.hasNext()) || hasNextCell()
+					|| last == null || last.hasNext();
+		}
+
+		private Page getChildPage(final int pageNumber) throws Trouble {
+			return page.getPager().readPage(pageNumber);
 		}
 
 		public BTreeRecord next() {
@@ -111,15 +110,15 @@ public class BTree implements Iterable<BTreeRecord> {
 				return current.next();
 			}
 			try {
-				if (cells.hasNext()) {
-					final Pointer cell = cells.next();
+				if (hasNextCell()) {
+					final Pointer cell = nextCell();
 					final int child = TableTrunkCell.getLeftChild(
 							cell.getMemory(), cell.getAddress());
-					current = newIterator(cells.page.getPager().readPage(child));
+					current = newIterator(getChildPage(child));
 					return current.next();
 				} else {
-					last = newIterator(cells.page.getPager().readPage(
-							PageHeader.getRightMostChildPageNumber(cells.page)));
+					last = newIterator(getChildPage(PageHeader
+							.getRightMostChildPageNumber(page)));
 					return last.next();
 				}
 			} catch (Trouble e) {
@@ -129,7 +128,5 @@ public class BTree implements Iterable<BTreeRecord> {
 
 		public void remove() {
 		}
-
 	}
-
 }
