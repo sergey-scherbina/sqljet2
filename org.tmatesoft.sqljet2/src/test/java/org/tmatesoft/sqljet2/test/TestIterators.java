@@ -1,9 +1,8 @@
 package org.tmatesoft.sqljet2.test;
 
 import org.junit.Test;
+import org.tmatesoft.sqljet2.internal.btree.BTree;
 import org.tmatesoft.sqljet2.internal.btree.BTreeRecord;
-import org.tmatesoft.sqljet2.internal.btree2.BTreeIterator;
-import org.tmatesoft.sqljet2.internal.btree2.BTreeIterator.LeafIterator;
 import org.tmatesoft.sqljet2.internal.pager.Pager;
 import org.tmatesoft.sqljet2.internal.pager.impl.FilePager;
 import org.tmatesoft.sqljet2.internal.system.FileSystem.OpenPermission;
@@ -19,7 +18,7 @@ public class TestIterators {
 		final Pager pager = new FilePager();
 		pager.open(TEST_DB, OpenPermission.READONLY);
 		try {
-			for (final BTreeRecord r : new BTreeIterator(pager.readPage(1))) {
+			for (final BTreeRecord r : new BTree(pager.readPage(1))) {
 				for (int i = 0; i < r.getColumnsCount(); i++) {
 					System.out.println(r.getValue(i));
 				}
@@ -35,7 +34,7 @@ public class TestIterators {
 		final Pager pager = new FilePager();
 		pager.open(TEST_DB2, OpenPermission.READONLY);
 		try {
-			for (final BTreeRecord s : new BTreeIterator(pager.readPage(1))) {
+			for (final BTreeRecord s : new BTree(pager.readPage(1))) {
 				final String type = (String) s.getValue(0);
 				final String name = (String) s.getValue(1);
 				final Number page = (Number) s.getValue(3);
@@ -48,7 +47,7 @@ public class TestIterators {
 					System.out.println(def);
 					System.out.println();
 					int n = 0;
-					for (final BTreeRecord r : new BTreeIterator(pager.readPage(page.intValue()))) {
+					for (final BTreeRecord r : new BTree(pager.readPage(page.intValue()))) {
 						System.out.println(++n);
 						for (int i = 0; i < r.getColumnsCount(); i++) {
 							System.out.println(r.getValue(i));

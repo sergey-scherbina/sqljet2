@@ -1,4 +1,4 @@
-package org.tmatesoft.sqljet2.internal.btree2;
+package org.tmatesoft.sqljet2.internal.btree;
 
 import org.tmatesoft.sqljet2.internal.system.Memory;
 import org.tmatesoft.sqljet2.internal.system.VarInt;

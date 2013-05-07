@@ -1,6 +1,4 @@
-package org.tmatesoft.sqljet2.internal.btree2;
-
-import static org.tmatesoft.sqljet2.internal.btree.BTreePageHeader.getCellsOffset;
+package org.tmatesoft.sqljet2.internal.btree;
 
 import org.tmatesoft.sqljet2.internal.pager.Page;
 import org.tmatesoft.sqljet2.internal.system.Memory;
