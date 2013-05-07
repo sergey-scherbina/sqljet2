@@ -71,12 +71,16 @@ public class BTree implements Iterable<BTreeRecord> {
 		public BTreeRecord next() {
 			try {
 				final Pointer cell = nextCell();
-				return new BTreeRecord(cell.getMemory().getPointer(
-						TableLeafCell.getPayloadOffset(cell.getMemory(),
-								cell.getAddress())));
+				return new BTreeRecord(getPayload(cell));
 			} catch (Trouble e) {
 				throw new RuntimeException(e);
 			}
+		}
+
+		private Pointer getPayload(final Pointer cell) {
+			return cell.getMemory().getPointer(
+					TableLeafCell.getPayloadOffset(cell.getMemory(),
+							cell.getAddress()));
 		}
 
 		public void remove() {
@@ -99,10 +103,6 @@ public class BTree implements Iterable<BTreeRecord> {
 					|| last == null || last.hasNext();
 		}
 
-		private Page getChildPage(final int pageNumber) throws Trouble {
-			return page.getPager().readPage(pageNumber);
-		}
-
 		public BTreeRecord next() {
 			if (last != null) {
 				return last.next();
@@ -111,10 +111,7 @@ public class BTree implements Iterable<BTreeRecord> {
 			}
 			try {
 				if (hasNextCell()) {
-					final Pointer cell = nextCell();
-					final int child = TableTrunkCell.getLeftChild(
-							cell.getMemory(), cell.getAddress());
-					current = newIterator(getChildPage(child));
+					current = newIterator(getChildPage(getChild(nextCell())));
 					return current.next();
 				} else {
 					last = newIterator(getChildPage(PageHeader
@@ -124,6 +121,15 @@ public class BTree implements Iterable<BTreeRecord> {
 			} catch (Trouble e) {
 				throw new RuntimeException(e);
 			}
+		}
+
+		private int getChild(final Pointer cell) {
+			return TableTrunkCell.getLeftChild(cell.getMemory(),
+					cell.getAddress());
+		}
+
+		private Page getChildPage(final int pageNumber) throws Trouble {
+			return page.getPager().readPage(pageNumber);
 		}
 
 		public void remove() {
