@@ -10,10 +10,20 @@ import org.tmatesoft.sqljet2.internal.system.Trouble;
 public class BTree implements Iterable<BTreeRecord> {
 
 	public static Iterator<BTreeRecord> newIterator(final Page page) {
-		if (PageHeader.isLeafPage(page)) {
-			return new LeafIterator(page);
+		final boolean isLeaf = PageHeader.isLeafPage(page);
+		final boolean isTable = PageHeader.isTablePage(page);
+		if (isTable) {
+			if (isLeaf) {
+				return new TableLeafIterator(page);
+			} else {
+				return new TableTrunkIterator(page);
+			}
 		} else {
-			return new TrunkIterator(page);
+			if (isLeaf) {
+				return new IndexLeafIterator(page);
+			} else {
+				return new IndexTrunkIterator(page);
+			}
 		}
 	}
 
@@ -57,7 +67,7 @@ public class BTree implements Iterable<BTreeRecord> {
 		}
 	}
 
-	private static class LeafIterator extends Cells implements
+	private static abstract class LeafIterator extends Cells implements
 			Iterator<BTreeRecord> {
 
 		public LeafIterator(final Page page) {
@@ -77,17 +87,39 @@ public class BTree implements Iterable<BTreeRecord> {
 			}
 		}
 
-		private Pointer getPayload(final Pointer cell) {
-			return cell.getMemory().getPointer(
-					TableLeafCell.getPayloadOffset(cell.getMemory(),
-							cell.getAddress()));
-		}
+		protected abstract Pointer getPayload(final Pointer cell);
 
 		public void remove() {
 		}
 	}
 
-	private static class TrunkIterator extends Cells implements
+	private static class TableLeafIterator extends LeafIterator {
+
+		public TableLeafIterator(final Page page) {
+			super(page);
+		}
+
+		protected Pointer getPayload(final Pointer cell) {
+			return cell.getMemory().getPointer(
+					TableLeafCell.getPayloadOffset(cell.getMemory(),
+							cell.getAddress()));
+		}
+	}
+
+	private static class IndexLeafIterator extends LeafIterator {
+
+		public IndexLeafIterator(final Page page) {
+			super(page);
+		}
+
+		protected Pointer getPayload(final Pointer cell) {
+			return cell.getMemory().getPointer(
+					IndexLeafCell.getPayloadOffset(cell.getMemory(),
+							cell.getAddress()));
+		}
+	}
+
+	private static abstract class TrunkIterator extends Cells implements
 			Iterator<BTreeRecord> {
 
 		private Iterator<BTreeRecord> current = null;
@@ -123,10 +155,7 @@ public class BTree implements Iterable<BTreeRecord> {
 			}
 		}
 
-		private int getChild(final Pointer cell) {
-			return TableTrunkCell.getLeftChild(cell.getMemory(),
-					cell.getAddress());
-		}
+		protected abstract int getChild(final Pointer cell);
 
 		private Page getChildPage(final int pageNumber) throws Trouble {
 			return page.getPager().readPage(pageNumber);
@@ -135,4 +164,31 @@ public class BTree implements Iterable<BTreeRecord> {
 		public void remove() {
 		}
 	}
+
+	private static class TableTrunkIterator extends TrunkIterator {
+
+		public TableTrunkIterator(final Page page) {
+			super(page);
+		}
+
+		protected int getChild(final Pointer cell) {
+			return TableTrunkCell.getLeftChild(cell.getMemory(),
+					cell.getAddress());
+		}
+
+	}
+
+	private static class IndexTrunkIterator extends TrunkIterator {
+
+		public IndexTrunkIterator(final Page page) {
+			super(page);
+		}
+
+		protected int getChild(final Pointer cell) {
+			return IndexTrunkCell.getLeftChild(cell.getMemory(),
+					cell.getAddress());
+		}
+
+	}
+
 }

@@ -98,7 +98,7 @@ public class PageHeader {
 
 	public static boolean isTablePage(final Page page) {
 		final byte t = getPageType(page);
-		return t == Def.TRUNK_TABLE || t == Def.TRUNK_TABLE;
+		return t == Def.TRUNK_TABLE || t == Def.LEAF_TABLE;
 	}
 
 	public static boolean isIndexPage(final Page page) {
