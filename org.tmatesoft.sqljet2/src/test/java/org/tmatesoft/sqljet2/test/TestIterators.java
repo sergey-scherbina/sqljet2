@@ -28,7 +28,7 @@ public class TestIterators {
 			pager.close();
 		}
 	}
-	
+
 	@Test
 	public void testData() throws Trouble {
 		final Pager pager = new FilePager();
@@ -39,7 +39,7 @@ public class TestIterators {
 				final String name = (String) s.getValue(1);
 				final Number page = (Number) s.getValue(3);
 				final String def = (String) s.getValue(4);
-				if("table".equalsIgnoreCase(type)) {
+				if ("table".equalsIgnoreCase(type)) {
 					System.out.println();
 					System.out.println(type);
 					System.out.println(name);
@@ -47,7 +47,8 @@ public class TestIterators {
 					System.out.println(def);
 					System.out.println();
 					int n = 0;
-					for (final BTreeRecord r : new BTree(pager.readPage(page.intValue()))) {
+					for (final BTreeRecord r : new BTree(pager.readPage(page
+							.intValue()))) {
 						System.out.println(++n);
 						for (int i = 0; i < r.getColumnsCount(); i++) {
 							System.out.println(r.getValue(i));
@@ -55,6 +56,31 @@ public class TestIterators {
 						System.out.println();
 					}
 				}
+			}
+		} finally {
+			pager.close();
+		}
+	}
+
+	@Test
+	public void testData2() throws Trouble {
+		final Pager pager = new FilePager();
+		pager.open(TEST_DB2, OpenPermission.READONLY);
+		try {
+			final BTreeRecord s = (new BTree(pager.readPage(1))).iterator()
+					.next();
+			final String type = (String) s.getValue(0);
+			final Number page = (Number) s.getValue(3);
+			if ("table".equalsIgnoreCase(type)) {
+				int n = 0;
+				for (final BTreeRecord r : new BTree(pager.readPage(page
+						.intValue()))) {
+					n++;
+					if ("03f2ef7de3f349642b8c7bc6a40e533f7186e37c".equals(r
+							.getValue(0)))
+						break;
+				}
+				System.out.println(n);
 			}
 		} finally {
 			pager.close();
