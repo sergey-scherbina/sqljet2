@@ -269,7 +269,7 @@ public class BTree {
 
 		public Pointer payload() {
 			if (!isOverflow()) {
-				return m.getPointer(payloadSizeOffset);
+				return m.getPointer(payloadOffset());
 			} else {
 				// TODO overflow
 				throw new UnsupportedOperationException();
