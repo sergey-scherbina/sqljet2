@@ -18,8 +18,10 @@ public class TestIterators {
 		final Pager pager = new FilePager();
 		pager.open(TEST_DB, OpenPermission.READONLY);
 		try {
-			for (final BTreeRecord r : new BTree(pager.readPage(1))) {
-				for (int i = 0; i < r.getColumnsCount(); i++) {
+			final BTree btree = new BTree(pager);
+			for (final BTree.Entry r : btree.page(1)) {
+				System.out.println(r.getRowId());
+				for (int i = 0; i < r.fieldsCount(); i++) {
 					System.out.println(r.getValue(i));
 				}
 				System.out.println();
@@ -34,7 +36,8 @@ public class TestIterators {
 		final Pager pager = new FilePager();
 		pager.open(TEST_DB2, OpenPermission.READONLY);
 		try {
-			for (final BTreeRecord s : new BTree(pager.readPage(1))) {
+			final BTree btree = new BTree(pager);
+			for (final BTree.Entry s : btree.page(1)) {
 				final String type = (String) s.getValue(0);
 				final String name = (String) s.getValue(1);
 				final Number page = (Number) s.getValue(3);
@@ -47,10 +50,10 @@ public class TestIterators {
 					System.out.println(def);
 					System.out.println();
 					int n = 0;
-					for (final BTreeRecord r : new BTree(pager.readPage(page
-							.intValue()))) {
+					for (final BTree.Entry r : btree.page(page.intValue())) {
 						System.out.println(++n);
-						for (int i = 0; i < r.getColumnsCount(); i++) {
+						System.out.println(r.getRowId());
+						for (int i = 0; i < r.fieldsCount(); i++) {
 							System.out.println(r.getValue(i));
 						}
 						System.out.println();
@@ -62,22 +65,22 @@ public class TestIterators {
 		}
 	}
 
+	private static final String MAGIC = "03f2ef7de3f349642b8c7bc6a40e533f7186e37c";
+
 	@Test
 	public void testData2() throws Trouble {
 		final Pager pager = new FilePager();
 		pager.open(TEST_DB2, OpenPermission.READONLY);
 		try {
-			final BTreeRecord s = (new BTree(pager.readPage(1))).iterator()
-					.next();
+			final BTree btree = new BTree(pager);
+			final BTree.Entry s = btree.page(1).iterator().next();
 			final String type = (String) s.getValue(0);
 			final Number page = (Number) s.getValue(3);
 			if ("table".equalsIgnoreCase(type)) {
 				int n = 0;
-				for (final BTreeRecord r : new BTree(pager.readPage(page
-						.intValue()))) {
+				for (final BTree.Entry r : btree.page(page.intValue())) {
 					n++;
-					if ("03f2ef7de3f349642b8c7bc6a40e533f7186e37c".equals(r
-							.getValue(0)))
+					if (MAGIC.equals(r.getValue(0)))
 						break;
 				}
 				System.out.println(n);

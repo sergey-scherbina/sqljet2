@@ -1,4 +1,4 @@
-package org.tmatesoft.sqljet2.internal.btree;
+package org.tmatesoft.sqljet2.internal.pager.impl;
 
 import java.nio.charset.Charset;
 import java.util.Arrays;
