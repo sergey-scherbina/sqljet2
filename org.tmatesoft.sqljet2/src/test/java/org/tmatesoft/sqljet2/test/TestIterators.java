@@ -2,7 +2,6 @@ package org.tmatesoft.sqljet2.test;
 
 import org.junit.Test;
 import org.tmatesoft.sqljet2.internal.btree.BTree;
-import org.tmatesoft.sqljet2.internal.btree.BTreeRecord;
 import org.tmatesoft.sqljet2.internal.pager.Pager;
 import org.tmatesoft.sqljet2.internal.pager.impl.FilePager;
 import org.tmatesoft.sqljet2.internal.system.FileSystem.OpenPermission;
@@ -82,6 +81,27 @@ public class TestIterators {
 					n++;
 					if (MAGIC.equals(r.getValue(0)))
 						break;
+				}
+				System.out.println(n);
+			}
+		} finally {
+			pager.close();
+		}
+	}
+
+	@Test
+	public void testCount() throws Trouble {
+		final Pager pager = new FilePager();
+		pager.open(TEST_DB2, OpenPermission.READONLY);
+		try {
+			final BTree btree = new BTree(pager);
+			final BTree.Entry s = btree.page(1).iterator().next();
+			final String type = (String) s.getValue(0);
+			final Number page = (Number) s.getValue(3);
+			if ("table".equalsIgnoreCase(type)) {
+				int n = 0;
+				for (final BTree.Entry r : btree.page(page.intValue())) {
+					n++;
 				}
 				System.out.println(n);
 			}
