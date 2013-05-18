@@ -73,22 +73,22 @@ public class FilePager implements Pager {
 		return LOCKPAGE_BEGIN / pageSize;
 	}
 
-	public boolean isLockBytePageNumber(int pageNumber) {
-		int pageOffset = pageNumber * pageSize;
+	public boolean isLockBytePageNumber(final int pageNumber) {
+		final long pageOffset = (long)pageNumber * (long)pageSize;
 		return pageOffset > LOCKPAGE_BEGIN && pageOffset < LOCKPAGE_END;
 	}
 
-	private MemoryBlock read(int position, int count) throws Trouble {
+	private MemoryBlock read(final long position, final int count) throws Trouble {
 		final MemoryBlock mem = new ArrayMemory(count);
 		stream.read(position, mem.getBegin(), count);
 		return mem;
 	}
 
-	public MemoryBlock readHeader(int count) throws Trouble {
+	public MemoryBlock readHeader(final int count) throws Trouble {
 		return read(0, count);
 	}
 
-	public Page readPage(int pageNumber) throws Trouble {
+	public Page readPage(final int pageNumber) throws Trouble {
 		{
 			final Page page = lookupPage(pageNumber);
 			if (page != null) {
@@ -96,14 +96,14 @@ public class FilePager implements Pager {
 			}
 		}
 		{
-			final MemoryBlock data = read(pageSize * (pageNumber - 1), pageSize);
+			final MemoryBlock data = read((long)pageSize * (long)(pageNumber - 1), pageSize);
 			final Page page = new MemoryPage(this, pageNumber, data);
 			cache.putPage(page);
 			return page;
 		}
 	}
 
-	public Page lookupPage(int pageNumber) {
+	public Page lookupPage(final int pageNumber) {
 		return cache.getPage(pageNumber);
 	}
 

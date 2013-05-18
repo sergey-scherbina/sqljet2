@@ -90,13 +90,13 @@ final public class ArrayMemory extends AbstractMemory implements
 	}
 
 	public int read(final int address, final RandomAccessFile stream,
-			final int position, final int count) throws IOException {
+			final long position, final int count) throws IOException {
 		stream.seek(position);
 		return stream.read(array, address, count);
 	}
 
 	public void write(final int address, final RandomAccessFile stream,
-			final int position, final int count) throws IOException {
+			final long position, final int count) throws IOException {
 		stream.seek(position);
 		stream.write(array, address, count);
 	}

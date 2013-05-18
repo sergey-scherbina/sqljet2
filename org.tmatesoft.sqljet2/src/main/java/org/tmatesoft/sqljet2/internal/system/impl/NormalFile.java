@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 
 import org.tmatesoft.sqljet2.internal.system.FileStream;
-import org.tmatesoft.sqljet2.internal.system.Memory;
-import org.tmatesoft.sqljet2.internal.system.MemoryBlock;
 import org.tmatesoft.sqljet2.internal.system.Pointer;
 import org.tmatesoft.sqljet2.internal.system.Trouble;
 
@@ -13,10 +11,10 @@ public class NormalFile implements FileStream {
 
 	public interface Streamable {
 
-		int read(int address, RandomAccessFile stream, int position, int count)
+		int read(int address, RandomAccessFile stream, long position, int count)
 				throws IOException;
 
-		void write(int address, RandomAccessFile stream, int position, int count)
+		void write(int address, RandomAccessFile stream, long position, int count)
 				throws IOException;
 	}
 
@@ -34,7 +32,7 @@ public class NormalFile implements FileStream {
 		}
 	}
 
-	public int read(int position, Pointer pointer, int count) throws Trouble {
+	public int read(long position, Pointer pointer, int count) throws Trouble {
 		try {
 			if (pointer.getMemory() instanceof Streamable) {
 				return ((Streamable) pointer.getMemory()).read(
@@ -51,7 +49,7 @@ public class NormalFile implements FileStream {
 		}
 	}
 
-	public void write(int position, Pointer pointer, int count) throws Trouble {
+	public void write(long position, Pointer pointer, int count) throws Trouble {
 		try {
 			if (pointer.getMemory() instanceof Streamable) {
 				((Streamable) pointer.getMemory()).write(pointer.getAddress(),
@@ -75,7 +73,7 @@ public class NormalFile implements FileStream {
 		}
 	}
 
-	public void truncate(final int size) throws Trouble {
+	public void truncate(final long size) throws Trouble {
 		try {
 			stream.setLength(size);
 		} catch (IOException e) {

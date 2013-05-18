@@ -12,13 +12,13 @@ public interface FileStream {
 
 	void close() throws Trouble;
 
-	int read(int position, Pointer pointer, int count) throws Trouble;
+	int read(long position, Pointer pointer, int count) throws Trouble;
 
-	void write(int position, Pointer pointer, int count) throws Trouble;
+	void write(long position, Pointer pointer, int count) throws Trouble;
 
 	void sync(boolean full) throws Trouble;
 
-	void truncate(int size) throws Trouble;
+	void truncate(long size) throws Trouble;
 
 	long getSize() throws Trouble;
 

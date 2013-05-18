@@ -111,7 +111,7 @@ final public class BufferMemory extends AbstractMemory implements
 	}
 
 	public int read(final int address, final RandomAccessFile stream,
-			final int position, final int count) throws IOException {
+			final long position, final int count) throws IOException {
 		buffer.position(address).limit(count);
 		try {
 			return stream.getChannel().read(buffer, position);
@@ -121,7 +121,7 @@ final public class BufferMemory extends AbstractMemory implements
 	}
 
 	public void write(final int address, final RandomAccessFile stream,
-			final int position, final int count) throws IOException {
+			final long position, final int count) throws IOException {
 		buffer.position(address).limit(count);
 		try {
 			stream.getChannel().write(buffer, position);
