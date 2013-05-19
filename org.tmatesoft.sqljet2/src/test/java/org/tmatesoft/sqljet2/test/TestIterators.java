@@ -2,6 +2,7 @@ package org.tmatesoft.sqljet2.test;
 
 import org.junit.Test;
 import org.tmatesoft.sqljet2.internal.btree.BTree;
+import org.tmatesoft.sqljet2.internal.btree.BTree2;
 import org.tmatesoft.sqljet2.internal.pager.Pager;
 import org.tmatesoft.sqljet2.internal.pager.impl.FilePager;
 import org.tmatesoft.sqljet2.internal.system.FileSystem.OpenPermission;
@@ -90,7 +91,7 @@ public class TestIterators {
 	}
 
 	@Test
-	public void testCount() throws Trouble {
+	public void testIterateCount() throws Trouble {
 		final Pager pager = new FilePager();
 		pager.open(TEST_DB2, OpenPermission.READONLY);
 		try {
@@ -104,6 +105,25 @@ public class TestIterators {
 					n++;
 				}
 				System.out.println(n);
+			}
+		} finally {
+			pager.close();
+		}
+	}
+
+	@Test
+	public void testFastCount() throws Trouble {
+		final Pager pager = new FilePager();
+		pager.open(TEST_DB2, OpenPermission.READONLY);
+		try {
+			final BTree btree = new BTree(pager);
+			final BTree.Entry s = btree.page(1).iterator().next();
+			final String type = (String) s.getValue(0);
+			final Number page = (Number) s.getValue(3);
+			if ("table".equalsIgnoreCase(type)) {
+				final long startMs = System.currentTimeMillis();
+				System.out.println(btree.count(page.intValue()));
+				System.out.println(System.currentTimeMillis() - startMs);
 			}
 		} finally {
 			pager.close();

@@ -29,6 +29,23 @@ public class BTree {
 		}
 	}
 
+	public long count(final int pageNumber) throws Trouble {
+		if (pageNumber <= 0)
+			return 0;
+		final Page page = getPage(pageNumber);
+		final int cells = PageHeader.getCellsCount(page);
+		if (PageHeader.isLeafPage(page)) {
+			return cells;
+		} else {
+			long count = 0;
+			for (int i = 0; i < cells; ++i) {
+				count += count(page.getData().getInt(
+						PageHeader.getCellOffset(page, i)));
+			}
+			return count + count(PageHeader.getRightMostChildPageNumber(page));
+		}
+	}
+
 	public Iterable<Entry> page(final int pageNumber) {
 		return new Iterable<Entry>() {
 			public Iterator<Entry> iterator() {
