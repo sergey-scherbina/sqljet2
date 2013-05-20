@@ -29,24 +29,7 @@ public class TestIterators {
 
 	private static BufferedWriter openOut() {
 		return new BufferedWriter(new OutputStreamWriter(new FileOutputStream(
-				java.io.FileDescriptor.out), Charset.forName("ASCII")), 512);
-	}
-
-	@AfterClass
-	public static void tearDownClass() {
-		closeOut();
-	}
-
-	@After
-	public void tearDown() {
-		flushOut();
-	}
-
-	private static void closeOut() {
-		try {
-			out.close();
-		} catch (IOException e) {
-		}
+				java.io.FileDescriptor.out), Charset.forName("US-ASCII")), 1024);
 	}
 
 	private void flushOut() {
@@ -54,6 +37,11 @@ public class TestIterators {
 			out.flush();
 		} catch (IOException e) {
 		}
+	}
+
+	@After
+	public void tearDown() {
+		flushOut();
 	}
 
 	private static String toString(final String s) {
