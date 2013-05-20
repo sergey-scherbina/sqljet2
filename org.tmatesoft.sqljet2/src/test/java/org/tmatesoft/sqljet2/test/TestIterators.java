@@ -202,31 +202,6 @@ public class TestIterators {
 		}
 	}
 
-	private List<BTree.Entry> selectAll(final BTree.Cursor cursor) {
-		final List<BTree.Entry> list = new LinkedList<BTree.Entry>();
-		for (final BTree.Entry e : cursor) {
-			list.add(e);
-		}
-		return list;
-	}
-
-	@Test
-	public void testSelectAll() throws Trouble {
-		println("testSelectAll");
-		println("select * from rep_cache;");
-		final BTree btree = btree();
-		try {
-			for (int i = 0; i < WARM; i++) {
-				selectAll(rep_cache(btree));
-			}
-			final long start = start();
-			selectAll(rep_cache(btree));
-			end(start);
-		} finally {
-			btree.close();
-		}
-	}
-
 	private void printAll(final Writer w, final BTree.Cursor cursor)
 			throws Trouble {
 		for (final BTree.Entry e : cursor) {
@@ -236,6 +211,47 @@ public class TestIterators {
 				print(w, " ");
 			}
 			println(w);
+		}
+	}
+
+	@Test
+	public void testPrintAllOut() throws Trouble {
+		final BTree btree = btree();
+		try {
+			for (int i = 0; i < WARM; i++) {
+				printAll(nullOut, rep_cache(btree));
+			}
+			final long start = start();
+			printAll(out, rep_cache(btree));
+			println("testPrintAllOut");
+			println("select * from rep_cache;");
+			end(start);
+		} finally {
+			btree.close();
+		}
+	}
+
+	private void printHash(final Writer w, final BTree.Cursor cursor)
+			throws Trouble {
+		for (final BTree.Entry e : cursor) {
+			println(w, e.getRecord().getString(0));
+		}
+	}
+
+	@Test
+	public void testPrintHashOut() throws Trouble {
+		final BTree btree = btree();
+		try {
+			for (int i = 0; i < WARM; i++) {
+				printHash(nullOut, rep_cache(btree));
+			}
+			final long start = start();
+			printHash(out, rep_cache(btree));
+			println("testPrintHashOut");
+			println("select hash from rep_cache;");
+			end(start);
+		} finally {
+			btree.close();
 		}
 	}
 
@@ -256,38 +272,6 @@ public class TestIterators {
 		}
 	}
 
-	private List<String> selectHash(final BTree.Cursor cursor) throws Trouble {
-		final List<String> list = new LinkedList<String>();
-		for (final BTree.Entry e : cursor) {
-			list.add(e.getRecord().getString(0));
-		}
-		return list;
-	}
-
-	@Test
-	public void testSelectHash() throws Trouble {
-		println("testSelectHash");
-		println("select hash from rep_cache;");
-		final BTree btree = btree();
-		try {
-			for (int i = 0; i < WARM; i++) {
-				selectHash(rep_cache(btree));
-			}
-			final long start = start();
-			selectHash(rep_cache(btree));
-			end(start);
-		} finally {
-			btree.close();
-		}
-	}
-
-	private void printHash(final Writer w, final BTree.Cursor cursor)
-			throws Trouble {
-		for (final BTree.Entry e : cursor) {
-			println(w, e.getRecord().getString(0));
-		}
-	}
-
 	@Test
 	public void testPrintHashNullOut() throws Trouble {
 		println("testPrintHashNullOut");
@@ -299,6 +283,56 @@ public class TestIterators {
 			}
 			final long start = start();
 			printHash(nullOut, rep_cache(btree));
+			end(start);
+		} finally {
+			btree.close();
+		}
+	}
+
+	private List<BTree.Entry> selectAll(final BTree.Cursor cursor) {
+		final List<BTree.Entry> list = new LinkedList<BTree.Entry>();
+		for (final BTree.Entry e : cursor) {
+			list.add(e);
+		}
+		return list;
+	}
+
+	@Test
+	public void testSelectAllToListNoPrint() throws Trouble {
+		println("testSelectAllToListNoPrint");
+		println("select * from rep_cache;");
+		final BTree btree = btree();
+		try {
+			for (int i = 0; i < WARM; i++) {
+				selectAll(rep_cache(btree));
+			}
+			final long start = start();
+			selectAll(rep_cache(btree));
+			end(start);
+		} finally {
+			btree.close();
+		}
+	}
+
+	private List<String> selectHash(final BTree.Cursor cursor) throws Trouble {
+		final List<String> list = new LinkedList<String>();
+		for (final BTree.Entry e : cursor) {
+			list.add(e.getRecord().getString(0));
+		}
+		return list;
+	}
+
+	@Test
+	public void testSelectHashToListNoPrint() throws Trouble {
+		println("testSelectHashToListNoPrint");
+		println("select hash from rep_cache;");
+		final BTree btree = btree();
+		try {
+			for (int i = 0; i < WARM; i++) {
+				selectHash(rep_cache(btree));
+			}
+			final long start = start();
+			selectHash(rep_cache(btree));
 			end(start);
 		} finally {
 			btree.close();
