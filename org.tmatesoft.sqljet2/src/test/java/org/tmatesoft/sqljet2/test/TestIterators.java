@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Test;
 import org.tmatesoft.sqljet2.internal.btree.BTree;
 import org.tmatesoft.sqljet2.internal.btree.BTreeRecord;
@@ -24,12 +25,31 @@ public class TestIterators {
 	private final static String TEST_DB = "src/test/resources/db/rep-cache.db";
 	private final static String REP_CACHE = "rep_cache";
 
-	private static final BufferedWriter out = new BufferedWriter(
-			new OutputStreamWriter(new FileOutputStream(
-					java.io.FileDescriptor.out), Charset.forName("ASCII")), 512);
+	private static final BufferedWriter out = openOut();
+
+	private static BufferedWriter openOut() {
+		return new BufferedWriter(new OutputStreamWriter(new FileOutputStream(
+				java.io.FileDescriptor.out), Charset.forName("ASCII")), 512);
+	}
+
+	@AfterClass
+	public static void tearDownClass() {
+		closeOut();
+	}
 
 	@After
 	public void tearDown() {
+		flushOut();
+	}
+
+	private static void closeOut() {
+		try {
+			out.close();
+		} catch (IOException e) {
+		}
+	}
+
+	private void flushOut() {
 		try {
 			out.flush();
 		} catch (IOException e) {
