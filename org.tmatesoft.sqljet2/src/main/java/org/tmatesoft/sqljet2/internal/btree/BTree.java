@@ -9,6 +9,7 @@ import org.tmatesoft.sqljet2.internal.system.Memory;
 import org.tmatesoft.sqljet2.internal.system.Pointer;
 import org.tmatesoft.sqljet2.internal.system.Trouble;
 import org.tmatesoft.sqljet2.internal.system.VarInt;
+import org.tmatesoft.sqljet2.internal.system.Trouble.Code;
 
 public class BTree {
 	private final Pager pager;
@@ -19,6 +20,10 @@ public class BTree {
 		this.pager = pager;
 		usableSize = pager.getPageSize(); // TODO - reservedSize
 		payloadSizes = new PayloadSizes(usableSize);
+	}
+
+	public void close() throws Trouble {
+		pager.close();
 	}
 
 	private Page getPage(final int pageNumber) {
@@ -44,6 +49,22 @@ public class BTree {
 			}
 			return count + count(PageHeader.getRightMostChildPageNumber(page));
 		}
+	}
+
+	public interface Cursor extends Iterable<Entry> {
+		long count() throws Trouble;
+	}
+
+	public Cursor cursor(final int pageNumber) {
+		return new Cursor() {
+			public Iterator<Entry> iterator() {
+				return newIterator(pageNumber);
+			}
+
+			public long count() throws Trouble {
+				return BTree.this.count(pageNumber);
+			}
+		};
 	}
 
 	public Iterable<Entry> page(final int pageNumber) {
@@ -76,54 +97,48 @@ public class BTree {
 	public interface Entry {
 		long getRowId() throws Trouble;
 
-		int fieldsCount();
-
-		Object getValue(int field) throws Trouble;
+		BTreeRecord getRecord() throws Trouble;
 	}
 
-	private static class TableEntry implements Entry {
-		private final long rowId;
-		private final BTreeRecord record;
+	private static abstract class RecordEntry implements Entry {
+		private final Pointer pointer;
+		private BTreeRecord record = null;
 
-		public TableEntry(final long rowId, final BTreeRecord record) {
+		protected RecordEntry(final Pointer pointer) {
+			this.pointer = pointer;
+		}
+
+		public BTreeRecord getRecord() throws Trouble {
+			if (record == null)
+				record = new BTreeRecord(pointer);
+			return record;
+		}
+	}
+
+	private static class TableEntry extends RecordEntry {
+		private final long rowId;
+
+		public TableEntry(final long rowId, final Pointer pointer) {
+			super(pointer);
 			this.rowId = rowId;
-			this.record = record;
 		}
 
 		public long getRowId() {
 			return rowId;
 		}
-
-		public int fieldsCount() {
-			return record.getColumnsCount();
-		}
-
-		public Object getValue(int field) throws Trouble {
-			return record.getValue(field);
-		}
 	}
 
-	private static class IndexEntry implements Entry {
-		private final BTreeRecord record;
+	private static class IndexEntry extends RecordEntry {
 
-		public IndexEntry(final BTreeRecord record) {
-			this.record = record;
+		public IndexEntry(final Pointer pointer) {
+			super(pointer);
 		}
 
 		public long getRowId() throws Trouble {
-			final Object value = record.getValue(record.getColumnsCount() - 1);
-			if (value instanceof Number) {
-				return ((Number) value).longValue();
-			}
-			return 0;
-		}
-
-		public int fieldsCount() {
-			return record.getColumnsCount();
-		}
-
-		public Object getValue(int field) throws Trouble {
-			return record.getValue(field);
+			final int last = getRecord().getColumnsCount() - 1;
+			if (getRecord().isInteger(last))
+				return getRecord().getInteger(last);
+			throw new Trouble(Code.ERROR);
 		}
 	}
 
@@ -339,8 +354,7 @@ public class BTree {
 		@Override
 		protected Entry entry(int cellOffset) throws Trouble {
 			final TableLeafCell cell = new TableLeafCell(getData(), cellOffset);
-			return new TableEntry(cell.intKey(),
-					new BTreeRecord(cell.payload()));
+			return new TableEntry(cell.intKey(), cell.payload());
 		}
 	}
 
@@ -352,7 +366,7 @@ public class BTree {
 		@Override
 		protected Entry entry(int cellOffset) throws Trouble {
 			final IndexLeafCell cell = new IndexLeafCell(getData(), cellOffset);
-			return new IndexEntry(new BTreeRecord(cell.payload()));
+			return new IndexEntry(cell.payload());
 		}
 	}
 
