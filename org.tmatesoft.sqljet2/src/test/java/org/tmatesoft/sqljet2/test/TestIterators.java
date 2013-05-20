@@ -3,13 +3,14 @@ package org.tmatesoft.sqljet2.test;
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.nio.charset.Charset;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Test;
 import org.tmatesoft.sqljet2.internal.btree.BTree;
 import org.tmatesoft.sqljet2.internal.btree.BTreeRecord;
@@ -26,6 +27,16 @@ public class TestIterators {
 	private final static String REP_CACHE = "rep_cache";
 
 	private static final BufferedWriter out = openOut();
+
+	private static final Writer nullOut = openNullOut();
+
+	private static Writer openNullOut() {
+		return new OutputStreamWriter(new OutputStream() {
+			@Override
+			public void write(int b) throws IOException {
+			}
+		});
+	}
 
 	private static BufferedWriter openOut() {
 		return new BufferedWriter(new OutputStreamWriter(new FileOutputStream(
@@ -56,47 +67,75 @@ public class TestIterators {
 		return Long.toString(x);
 	}
 
-	private static void print(final String s) {
+	private static void print(final Writer w, final String s) {
 		try {
-			out.write(toString(s));
+			w.write(toString(s));
 		} catch (IOException e) {
 		}
+	}
+
+	private static void print(final Writer w, final Object x) {
+		try {
+			w.write(toString(x));
+		} catch (IOException e) {
+		}
+	}
+
+	private static void print(final Writer w, final long x) {
+		try {
+			w.write(toString(x));
+		} catch (IOException e) {
+		}
+	}
+
+	private static void println(final Writer w) {
+		try {
+			w.write('\n');
+		} catch (IOException e) {
+		}
+	}
+
+	private static void println(final Writer w, final String s) {
+		print(w, s);
+		println(w);
+	}
+
+	private static void println(final Writer w, final Object x) {
+		print(w, x);
+		println(w);
+	}
+
+	private static void println(final Writer w, final long x) {
+		print(w, x);
+		println(w);
+	}
+
+	private static void print(final String s) {
+		print(out, s);
 	}
 
 	private static void print(final Object x) {
-		try {
-			out.write(toString(x));
-		} catch (IOException e) {
-		}
+		print(out, x);
 	}
 
 	private static void print(final long x) {
-		try {
-			out.write(toString(x));
-		} catch (IOException e) {
-		}
+		print(out, x);
 	}
 
 	private static void println() {
-		try {
-			out.write('\n');
-		} catch (IOException e) {
-		}
+		println(out);
 	}
 
 	private static void println(final String s) {
-		print(s);
-		println();
+		println(out, s);
 	}
 
 	private static void println(final Object x) {
-		print(x);
-		println();
+		println(out, x);
 	}
 
 	private static void println(final long x) {
-		print(x);
-		println();
+		println(out, x);
 	}
 
 	private static String ns(final long ns) {
@@ -163,7 +202,7 @@ public class TestIterators {
 		}
 	}
 
-	private List<BTree.Entry> select(final BTree.Cursor cursor) {
+	private List<BTree.Entry> selectAll(final BTree.Cursor cursor) {
 		final List<BTree.Entry> list = new LinkedList<BTree.Entry>();
 		for (final BTree.Entry e : cursor) {
 			list.add(e);
@@ -172,25 +211,46 @@ public class TestIterators {
 	}
 
 	@Test
-	public void testSelect() throws Trouble {
+	public void testSelectAll() throws Trouble {
+		println("testSelectAll");
 		println("select * from rep_cache;");
 		final BTree btree = btree();
 		try {
 			for (int i = 0; i < WARM; i++) {
-				select(rep_cache(btree));
+				selectAll(rep_cache(btree));
 			}
 			final long start = start();
-			final List<BTree.Entry> select = select(rep_cache(btree));
-			final String time = time(start);
-			for (final BTree.Entry e : select) {
-				final BTreeRecord r = e.getRecord();
-				for (int i = 0; i < r.getColumnsCount(); ++i) {
-					print(r.getValue(i));
-					print(" ");
-				}
-				println();
+			selectAll(rep_cache(btree));
+			end(start);
+		} finally {
+			btree.close();
+		}
+	}
+
+	private void printAll(final Writer w, final BTree.Cursor cursor)
+			throws Trouble {
+		for (final BTree.Entry e : cursor) {
+			final BTreeRecord r = e.getRecord();
+			for (int i = 0; i < r.getColumnsCount(); ++i) {
+				print(w, r.getValue(i));
+				print(w, " ");
 			}
-			println(time);
+			println(w);
+		}
+	}
+
+	@Test
+	public void testPrintAllNullOut() throws Trouble {
+		println("testPrintAllNullOut");
+		println("select * from rep_cache;");
+		final BTree btree = btree();
+		try {
+			for (int i = 0; i < WARM; i++) {
+				printAll(nullOut, rep_cache(btree));
+			}
+			final long start = start();
+			printAll(nullOut, rep_cache(btree));
+			end(start);
 		} finally {
 			btree.close();
 		}
@@ -206,6 +266,7 @@ public class TestIterators {
 
 	@Test
 	public void testSelectHash() throws Trouble {
+		println("testSelectHash");
 		println("select hash from rep_cache;");
 		final BTree btree = btree();
 		try {
@@ -213,12 +274,32 @@ public class TestIterators {
 				selectHash(rep_cache(btree));
 			}
 			final long start = start();
-			final List<String> hashes = selectHash(rep_cache(btree));
-			final String time = time(start);
-			for (final String hash : hashes) {
-				println(hash);
+			selectHash(rep_cache(btree));
+			end(start);
+		} finally {
+			btree.close();
+		}
+	}
+
+	private void printHash(final Writer w, final BTree.Cursor cursor)
+			throws Trouble {
+		for (final BTree.Entry e : cursor) {
+			println(w, e.getRecord().getString(0));
+		}
+	}
+
+	@Test
+	public void testPrintHashNullOut() throws Trouble {
+		println("testPrintHashNullOut");
+		println("select hash from rep_cache;");
+		final BTree btree = btree();
+		try {
+			for (int i = 0; i < WARM; i++) {
+				printHash(nullOut, rep_cache(btree));
 			}
-			println(time);
+			final long start = start();
+			printHash(nullOut, rep_cache(btree));
+			end(start);
 		} finally {
 			btree.close();
 		}
@@ -228,8 +309,9 @@ public class TestIterators {
 			throws Trouble {
 		long count = 0;
 		for (final BTree.Entry e : cursor) {
-			if (!s.equals(e.getRecord().getString(0)))
+			if (!s.equals(e.getRecord().getString(0))) {
 				++count;
+			}
 		}
 		return count;
 	}
@@ -238,6 +320,7 @@ public class TestIterators {
 
 	@Test
 	public void testCountIterate() throws Trouble {
+		println("testCountIterate");
 		println("select count(*) from rep_cache where hash!='abcdef';");
 		final BTree btree = btree();
 		try {
@@ -246,8 +329,8 @@ public class TestIterators {
 			}
 			final long start = start();
 			final long count = countIterate(ABCDEF, rep_cache(btree));
-			end(start);
 			println(count);
+			end(start);
 		} finally {
 			btree.close();
 		}
@@ -255,6 +338,7 @@ public class TestIterators {
 
 	@Test
 	public void testFastCount() throws Trouble {
+		println("testFastCount");
 		println("select count(*) from rep_cache;");
 		final BTree btree = btree();
 		try {
@@ -263,8 +347,8 @@ public class TestIterators {
 			}
 			final long start = start();
 			final long count = rep_cache(btree).count();
-			end(start);
 			println(count);
+			end(start);
 		} finally {
 			btree.close();
 		}
@@ -282,6 +366,7 @@ public class TestIterators {
 
 	@Test
 	public void testMaxOffset() throws Trouble {
+		println("testMaxOffset");
 		println("select max(offset) from rep_cache;");
 		final BTree btree = btree();
 		try {
@@ -290,8 +375,8 @@ public class TestIterators {
 			}
 			final long start = start();
 			final long max = max(2, rep_cache(btree));
-			end(start);
 			println(max);
+			end(start);
 		} finally {
 			btree.close();
 		}
