@@ -1,8 +1,14 @@
 package org.tmatesoft.sqljet2.test;
 
+import java.io.BufferedWriter;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.nio.charset.Charset;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.junit.After;
 import org.junit.Test;
 import org.tmatesoft.sqljet2.internal.btree.BTree;
 import org.tmatesoft.sqljet2.internal.btree.BTreeRecord;
@@ -18,47 +24,86 @@ public class TestIterators {
 	private final static String TEST_DB = "src/test/resources/db/rep-cache.db";
 	private final static String REP_CACHE = "rep_cache";
 
-	private void print(final String s) {
-		System.out.print(s);
+	private static final BufferedWriter out = new BufferedWriter(
+			new OutputStreamWriter(new FileOutputStream(
+					java.io.FileDescriptor.out), Charset.forName("ASCII")), 512);
+
+	@After
+	public void tearDown() {
+		try {
+			out.flush();
+		} catch (IOException e) {
+		}
 	}
 
-	private void print(final Object x) {
-		System.out.print(x);
+	private static String toString(final String s) {
+		return (s == null) ? "null" : s;
 	}
 
-	private void print(final long x) {
-		System.out.print(x);
+	private static String toString(final Object x) {
+		return (x == null) ? "null" : x.toString();
 	}
 
-	private void println() {
-		System.out.println();
+	private static String toString(final long x) {
+		return Long.toString(x);
 	}
 
-	private void println(final String s) {
-		System.out.println(s);
+	private static void print(final String s) {
+		try {
+			out.write(toString(s));
+		} catch (IOException e) {
+		}
 	}
 
-	private void println(final Object x) {
-		System.out.println(x);
+	private static void print(final Object x) {
+		try {
+			out.write(toString(x));
+		} catch (IOException e) {
+		}
 	}
 
-	private void println(final long x) {
-		System.out.println(x);
+	private static void print(final long x) {
+		try {
+			out.write(toString(x));
+		} catch (IOException e) {
+		}
 	}
 
-	private String ns(final long ns) {
+	private static void println() {
+		try {
+			out.write('\n');
+		} catch (IOException e) {
+		}
+	}
+
+	private static void println(final String s) {
+		print(s);
+		println();
+	}
+
+	private static void println(final Object x) {
+		print(x);
+		println();
+	}
+
+	private static void println(final long x) {
+		print(x);
+		println();
+	}
+
+	private static String ns(final long ns) {
 		return String.format("%f s", ((double) ns) / 1E9);
 	}
 
-	private long start() {
+	private static long start() {
 		return System.nanoTime();
 	}
 
-	private String time(final long start) {
+	private static String time(final long start) {
 		return ns(System.nanoTime() - start);
 	}
 
-	private void end(final long start) {
+	private static void end(final long start) {
 		println("Time: " + time(start));
 	}
 
