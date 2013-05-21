@@ -1,0 +1,15 @@
+select * from rep_cache;
+CPU Time: user 0.005987 sys 0.003429
+
+select hash from rep_cache;
+CPU Time: user 0.002871 sys 0.003682
+
+sqlite> select count(*) from rep_cache where hash!='abcdef';
+2595
+CPU Time: user 0.000672 sys 0.000063
+sqlite> select count(*) from rep_cache;
+2595
+CPU Time: user 0.000106 sys 0.000050
+sqlite> select max(offset) from rep_cache;
+510875
+CPU Time: user 0.000631 sys 0.000047
