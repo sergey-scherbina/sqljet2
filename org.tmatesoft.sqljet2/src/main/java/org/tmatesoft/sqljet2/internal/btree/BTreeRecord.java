@@ -6,6 +6,8 @@ import org.tmatesoft.sqljet2.internal.system.Trouble.Code;
 import org.tmatesoft.sqljet2.internal.system.VarInt;
 import org.tmatesoft.sqljet2.internal.system.impl.AbstractMemory;
 
+import java.nio.ByteBuffer;
+
 public class BTreeRecord {
 
 	private final Object NULL = new Object();
@@ -235,23 +237,6 @@ public class BTreeRecord {
 		}
 	}
 
-	public String getString(int column) throws Trouble {
-		final int type = getType(column);
-		final int offset = columnsOffsets[column];
-		switch (type) {
-		case 0:
-			return null;
-		default:
-			if (type >= 13 && !isEven(type)) {
-				final int size = (type - 13) / 2;
-				byte[] b = new byte[size];
-				pointer.getBytes(offset, b);
-				return new String(b);
-			}
-		}
-		throw new Trouble(Code.ERROR);
-	}
-
 	public long getInteger(final int column) throws Trouble {
 		final int type = getType(column);
 		final int offset = columnsOffsets[column];
@@ -297,5 +282,54 @@ public class BTreeRecord {
 		}
 		throw new Trouble(Code.ERROR);
 	}
+
+    public String getString(int column) throws Trouble {
+        final int type = getType(column);
+        final int offset = columnsOffsets[column];
+        switch (type) {
+            case 0:
+                return null;
+            default:
+                if (type >= 13 && !isEven(type)) {
+                    final int size = (type - 13) / 2;
+                    byte[] b = new byte[size];
+                    pointer.getBytes(offset, b);
+                    return new String(b);
+                }
+        }
+        throw new Trouble(Code.ERROR);
+    }
+
+    public byte[] getStringBytes(int column) throws Trouble {
+        final int type = getType(column);
+        final int offset = columnsOffsets[column];
+        switch (type) {
+            case 0:
+                return null;
+            default:
+                if (type >= 13 && !isEven(type)) {
+                    final int size = (type - 13) / 2;
+                    byte[] b = new byte[size];
+                    pointer.getBytes(offset, b);
+                    return b;
+                }
+        }
+        throw new Trouble(Code.ERROR);
+    }
+
+    public ByteBuffer getStringByteBuffer(int column) throws Trouble {
+        final int type = getType(column);
+        final int offset = columnsOffsets[column];
+        switch (type) {
+            case 0:
+                return null;
+            default:
+                if (type >= 13 && !isEven(type)) {
+                    final int size = (type - 13) / 2;
+                    return pointer.getBuffer(offset, size);
+                }
+        }
+        throw new Trouble(Code.ERROR);
+    }
 
 }

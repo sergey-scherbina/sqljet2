@@ -1,0 +1,32 @@
+testPrint 0,006035 s
+
+
+select hash from rep_cache;
+
+testSelectHash 0,002586 s
+
+
+select * from rep_cache;
+
+testSelect 0,001748 s
+
+
+
+select max(offset) from rep_cache;
+testMaxOffset 0,000555 s
+
+
+
+select count(*) from rep_cache;
+testFastCount 0,000015 s
+
+
+
+select count(*) from rep_cache where hash!='';
+testCountIterate 0,000738 s
+
+
+
+select count(*) from rep_cache where hash!='';
+testCountIterateBytes 0,000537 s
+

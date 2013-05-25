@@ -1,5 +1,7 @@
 package org.tmatesoft.sqljet2.internal.system;
 
+import java.nio.ByteBuffer;
+
 public interface Memory {
 
 	short MAX_UNSIGNED_BYTE = 0xFF;
@@ -62,5 +64,7 @@ public interface Memory {
 	void getBytes(int address, byte[] to);
 
 	void putBytes(int address, byte[] from);
+
+    ByteBuffer getBuffer(int address, int size);
 
 }

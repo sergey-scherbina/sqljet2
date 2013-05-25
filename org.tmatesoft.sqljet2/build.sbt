@@ -4,8 +4,8 @@ organization := "org.tmatesoft"
 
 libraryDependencies += "com.novocode" % "junit-interface" % "0.8" % "test"
 
-fork in test := true
+fork in Test := true
 
-javaOptions in test += "-XX:CompileThreshold=100"
+javaOptions in Test += "-XX:CompileThreshold=1500"
 
-parallelExecution in test := false
+parallelExecution in Test := false

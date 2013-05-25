@@ -2,6 +2,7 @@ package org.tmatesoft.sqljet2.internal.system.impl;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 final public class ArrayMemory extends AbstractMemory implements
@@ -101,4 +102,7 @@ final public class ArrayMemory extends AbstractMemory implements
 		stream.write(array, address, count);
 	}
 
+    public ByteBuffer getBuffer(int address, int size) {
+        return ByteBuffer.wrap(array,address,size);
+    }
 }

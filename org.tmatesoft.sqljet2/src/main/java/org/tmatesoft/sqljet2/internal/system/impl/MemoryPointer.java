@@ -3,6 +3,8 @@ package org.tmatesoft.sqljet2.internal.system.impl;
 import org.tmatesoft.sqljet2.internal.system.Memory;
 import org.tmatesoft.sqljet2.internal.system.Pointer;
 
+import java.nio.ByteBuffer;
+
 final public class MemoryPointer implements Pointer {
 
 	private final Memory memory;
@@ -250,4 +252,8 @@ final public class MemoryPointer implements Pointer {
 		memory.putBytes(address + offset, from);
 	}
 
+    @Override
+    public ByteBuffer getBuffer(int offset, int size) {
+        return memory.getBuffer(address + offset, size);
+    }
 }

@@ -130,4 +130,10 @@ final public class BufferMemory extends AbstractMemory implements
 		}
 	}
 
+    public ByteBuffer getBuffer(int address, int size) {
+        final ByteBuffer b = buffer.duplicate();
+        b.position(address).limit(address + size);
+        return b.slice();
+    }
+
 }
